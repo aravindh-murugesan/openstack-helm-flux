@@ -1,0 +1,87 @@
+release_group: neutron
+
+network:
+  backend:
+    - ovn
+  server:
+    ingress:
+      public: false
+
+pod:
+  replicas:
+    server: 3
+  resources:
+    enabled: true
+    server:
+      requests:
+        memory: "1024Mi"
+        cpu: "1000m"
+      limits:
+        memory: "2048Mi"
+        cpu: "2000m"
+
+conf:
+  logging:
+    logger_neutron:
+      level: INFO
+  neutron:
+    DEFAULT:
+      api_workers: 4
+      rpc_workers: 6
+      rpc_response_timeout: 600
+      router_distributed: True
+      default_availability_zones: nova
+      service_plugins: qos,ovn-router,segments,trunk,log,taas,tapmirror,pvlan
+      l3_ha_network_type: geneve
+    ovn:
+      ovn_emit_need_to_frag: true
+    oslo_messaging_rabbit:
+      rabbit_ha_queues: false
+      rabbit_quorum_queues: true
+  plugins:
+    ml2_conf:
+      ml2:
+        extension_drivers: port_security,qos,uplink_status_propagation,availability_zone
+        type_drivers: flat,vxlan,geneve
+        tenant_network_types: geneve
+      ovn:
+        ovn_l3_scheduler: leastloaded
+        dns_servers: "8.8.8.8, 1.1.1.1"
+        neutron_sync_mode: repair
+    taas:
+      taas:
+        enabled: true
+  taas_plugin:
+    service_providers:
+      service_provider: TAAS:TAAS:neutron_taas.services.taas.service_drivers.ovn.taas_ovn.TaasOvnDriver:default
+
+secrets:
+  identity:
+    neutron: neutron-keystone-neutron
+    keystone: keystone-keystone-neutron
+    cinder: cinder-keystone-neutron
+    placement: placement-keystone-neutron
+    nova: nova-keystone-neutron
+    glance: glance-keystone-neutron
+    admin: neutron-keystone-admin
+    service: neutron-keystone-service
+
+dependencies:
+  static:
+    db_sync:
+      jobs: []
+    server:
+      - neutron-db-sync
+      - neutron-ks-user
+      - neutron-ks-endpoints
+
+manifests:
+  job_db_init: false
+  job_rabbit_init: false
+  daemonset_dhcp_agent: false
+  daemonset_l3_agent: false
+  daemonset_metadata_agent: false
+  daemonset_ovs_agent: false
+  deployment_rpc_server: false
+  daemonset_ovn_metadata_agent: true
+  daemonset_ovn_vpn_agent: false

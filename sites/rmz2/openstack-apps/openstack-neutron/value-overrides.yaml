@@ -1,0 +1,110 @@
+extraObjects:
+  - apiVersion: k8s.mariadb.com/v1alpha1
+    kind: Database
+    metadata:
+      name: neutron
+    spec:
+      mariaDbRef:
+        name: mariadb
+        waitForIt: true
+      characterSet: utf8
+      collate: utf8_general_ci
+      retryInterval: 5s
+  - apiVersion: k8s.mariadb.com/v1alpha1
+    kind: User
+    metadata:
+      name: neutron
+    spec:
+      mariaDbRef:
+        name: mariadb
+        waitForIt: true
+      passwordSecretKeyRef:
+        name: neutron-db-password
+        key: password
+      maxUserConnections: 0
+      host: "%"
+      retryInterval: 5s
+  - apiVersion: k8s.mariadb.com/v1alpha1
+    kind: Grant
+    metadata:
+      name: neutron-grant
+    spec:
+      mariaDbRef:
+        name: mariadb
+        waitForIt: true
+      privileges:
+        - "ALL"
+      database: "neutron"
+      table: "*"
+      username: neutron
+      grantOption: true
+      host: "%"
+      retryInterval: 5s
+  - apiVersion: rabbitmq.com/v1beta1
+    kind: User
+    metadata:
+      name: neutron
+    spec:
+      tags:
+        - management
+        - policymaker
+      rabbitmqClusterReference:
+        name: rabbitmq
+      importCredentialsSecret:
+        name: neutron-rabbitmq-password
+  - apiVersion: rabbitmq.com/v1beta1
+    kind: Vhost
+    metadata:
+      name: neutron-vhost
+    spec:
+      name: "neutron"
+      defaultQueueType: quorum
+      rabbitmqClusterReference:
+        name: rabbitmq
+  - apiVersion: rabbitmq.com/v1beta1
+    kind: Permission
+    metadata:
+      name: neutron-permission
+    spec:
+      vhost: "neutron"
+      userReference:
+        name: "neutron"
+      permissions:
+        write: ".*"
+        configure: ".*"
+        read: ".*"
+      rabbitmqClusterReference:
+        name: rabbitmq
+  - apiVersion: rabbitmq.com/v1beta1
+    kind: Policy
+    metadata:
+      name: neutron-notifications-ttl
+    spec:
+      name: neutron-notifications-ttl
+      vhost: "neutron"
+      pattern: "^notifications.*"
+      applyTo: "queues"
+      priority: 1
+      definition:
+        message-ttl: 86400000
+      rabbitmqClusterReference:
+        name: rabbitmq
+  - apiVersion: autoscaling/v2
+    kind: HorizontalPodAutoscaler
+    metadata:
+      name: neutron-server-hpa
+      namespace: "{{ .Release.Namespace }}"
+    spec:
+      scaleTargetRef:
+        apiVersion: apps/v1
+        kind: Deployment
+        name: neutron-server
+      minReplicas: 3
+      maxReplicas: 10
+      metrics:
+        - type: Resource
+          resource:
+            name: cpu
+            target:
+              type: Utilization
+              averageUtilization: 75

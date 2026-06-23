@@ -24,3 +24,4 @@ resources:
   - ./flux/openstack-openvswitch.yaml
   - ./flux/openstack-ovn.yaml
   - ./flux/openstack-placement.yaml
+  - ./flux/openstack-neutron.yaml

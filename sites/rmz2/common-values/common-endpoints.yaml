@@ -44,6 +44,15 @@ endpoints:
     host_fqdn_override:
       public:
         host: "placement.rmz2.com"
+  network:
+    scheme:
+      public: https
+    port:
+      api:
+        public: 443
+    host_fqdn_override:
+      public:
+        host: "neutron.rmz2.com"
   identity:
     auth:
       admin:
@@ -75,6 +84,14 @@ endpoints:
         project_name: service
         username: placement
         password: "hCu2hgXH9UJx2Up8K8iAxucI0H3BMIAF"
+        user_domain_name: service
+        project_domain_name: service
+      neutron:
+        region_name: RMZ
+        role: admin,service
+        username: neutron
+        password: "73tfUn69lUHkEzbw0kgdLiu9FdPPx8t2"
+        project_name: service
         user_domain_name: service
         project_domain_name: service
     host_fqdn_override:
