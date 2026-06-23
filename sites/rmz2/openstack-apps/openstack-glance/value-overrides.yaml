@@ -38,7 +38,7 @@ extraObjects:
         - matches:
             - path:
                 type: PathPrefix
-                value: /glance
+                value: /
           timeouts:
             request: 3600s
             backendRequest: 3600s

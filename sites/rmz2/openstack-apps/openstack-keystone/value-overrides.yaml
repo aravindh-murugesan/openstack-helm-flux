@@ -33,13 +33,7 @@ extraObjects:
         - matches:
             - path:
                 type: PathPrefix
-                value: /keystone
-          filters:
-            - type: URLRewrite
-              urlRewrite:
-                path:
-                  type: ReplacePrefixMatch
-                  replacePrefixMatch: /
+                value: /
           backendRefs:
             - name: keystone-api
               port: 5000
