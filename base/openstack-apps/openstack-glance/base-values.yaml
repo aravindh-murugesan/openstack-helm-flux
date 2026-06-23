@@ -1,0 +1,87 @@
+release_group: glance
+
+bootstrap:
+  enabled: true
+  ks_user: admin
+  script: null
+  structured:
+    images: []
+
+network:
+  api:
+    ingress:
+      public: false
+
+conf:
+  glance:
+    DEFAULT:
+      workers: 4
+
+volume:
+  class_name: "local-path"
+  size: "10Gi"
+  accessModes:
+    - "ReadWriteOnce"
+
+volume_staging:
+  class_name: "local-path"
+  size: 10Gi
+  accessModes:
+    - ReadWriteOnce
+
+pod:
+  replicas:
+    api: 1
+  resources:
+    enabled: true
+    api:
+      requests:
+        memory: "512Mi"
+        cpu: "500m"
+      limits:
+        memory: "2048Mi"
+        cpu: "2000m"
+
+dependencies:
+  dynamic:
+    common:
+      local_image_registry:
+        jobs: null
+  static:
+    db_sync:
+      jobs:
+    api:
+      jobs:
+        - glance-db-sync
+        - glance-ks-user
+        - glance-ks-endpoints
+
+manifests:
+  certificates: false
+  configmap_bin: true
+  configmap_etc: true
+  deployment_api: true
+  ingress_api: true
+  job_bootstrap: true
+  job_clean: true
+  job_db_init: false
+  job_db_sync: true
+  job_db_drop: false
+  job_image_repo_sync: true
+  job_ks_endpoints: true
+  job_ks_service: true
+  job_ks_user: true
+  job_storage_init: true
+  job_metadefs_load: true
+  job_rabbit_init: false
+  pdb_api: true
+  pod_rally_test: false
+  pvc_images: true
+  network_policy: false
+  secret_db: false
+  secret_ingress_tls: false
+  secret_keystone: true
+  secret_rabbitmq: false
+  secret_registry: true
+  service_ingress_api: true
+  service_api: true

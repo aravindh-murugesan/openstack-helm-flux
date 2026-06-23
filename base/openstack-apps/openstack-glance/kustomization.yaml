@@ -1,0 +1,14 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+configMapGenerator:
+  - name: openstack-helm-flux-glance-values
+    # Disable name suffix hashing so the HelmRelease can predictably find it
+    behavior: create
+    options:
+      disableNameSuffixHash: true
+      labels:
+        reconcile.fluxcd.io/watch: Enabled
+    files:
+      - values.yaml=base-values.yaml
