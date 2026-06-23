@@ -9,7 +9,7 @@ endpoints:
       public:
         host: "cloud.rmz1.com"
     path:
-      default: /glance
+      public: /glance
   identity:
     auth:
       admin:
@@ -31,7 +31,9 @@ endpoints:
       public:
         host: "cloud.rmz1.com"
     path:
-      default: /keystone/v3
+      default: /v3
+      healthcheck: /healthcheck
+      public: /keystone/v3
     scheme:
       public: https
     port:
