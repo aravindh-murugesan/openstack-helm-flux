@@ -1,0 +1,40 @@
+conf:
+  memcached:
+    max_connections: 8192
+    memory: 2048
+    stats_cachedump:
+      enabled: true
+
+memcached:
+  extraContainers: []
+  extraServicePorts: []
+
+pod:
+  probes:
+    memcached:
+      memcached:
+        readiness:
+          enabled: True
+          params:
+            initialDelaySeconds: 0
+            periodSeconds: 10
+            timeoutSeconds: 5
+        liveness:
+          enabled: True
+          params:
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            timeoutSeconds: 10
+  replicas:
+    server: 3
+  resources:
+    enabled: true
+    memcached:
+      limits:
+        cpu: "2000m"
+        memory: "2048Mi"
+      requests:
+        cpu: "500m"
+        memory: "128Mi"
+
+extraObjects: []

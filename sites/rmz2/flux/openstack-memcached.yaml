@@ -1,0 +1,48 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: openstack-memcached-values
+  namespace: openstack
+  labels:
+    openstack-helm-flux/component-group: openstack-infra
+spec:
+  interval: 30m
+  sourceRef:
+    kind: GitRepository
+    name: openstack-helm-flux-repo
+    namespace: flux-system
+  path: ./sites/rmz2/openstack-apps/memcached
+  targetNamespace: openstack
+  prune: true
+  wait: true
+
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: openstack-memcached
+  namespace: openstack
+  labels:
+    openstack-helm-flux/component-group: openstack-infra
+spec:
+  interval: 60m
+  targetNamespace: openstack
+  releaseName: memcached
+  chart:
+    spec:
+      chart: memcached
+      version: 2026.1.0+a2a343968
+      sourceRef:
+        kind: HelmRepository
+        name: openstack-helm-repo
+        namespace: flux-system
+  install:
+    createNamespace: true
+  valuesFrom:
+    - kind: ConfigMap
+      name: openstack-helm-flux-memcached-values
+      valuesKey: values.yaml
+    - kind: ConfigMap
+      name: openstack-helm-flux-memcached-values-override
+      valuesKey: values.yaml
