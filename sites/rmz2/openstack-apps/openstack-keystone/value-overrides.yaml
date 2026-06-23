@@ -17,6 +17,14 @@ pod:
   replicas:
     api: 3
 
+endpoints:
+  identity:
+    host_fqdn_override:
+      public:
+        host: cloud.rmz1.com
+    path:
+      default: /keystone/v3
+
 extraObjects:
   - apiVersion: gateway.networking.k8s.io/v1
     kind: HTTPRoute
@@ -33,7 +41,13 @@ extraObjects:
         - matches:
             - path:
                 type: PathPrefix
-                value: /
+                value: /keystone
+          filters:
+            - type: URLRewrite
+              urlRewrite:
+                path:
+                  type: ReplacePrefixMatch
+                  replacePrefixMatch: /
           backendRefs:
             - name: keystone-api
               port: 5000
