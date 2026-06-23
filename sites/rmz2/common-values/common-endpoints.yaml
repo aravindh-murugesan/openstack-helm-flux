@@ -48,6 +48,6 @@ endpoints:
       default: memcached
     host_fqdn_override:
       default: null
-    statefulSet:
+    statefulset:
       replicas: 3
       name: memcached
