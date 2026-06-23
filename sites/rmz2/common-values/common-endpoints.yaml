@@ -31,9 +31,11 @@ endpoints:
       public:
         host: "cloud.rmz1.com"
     path:
-      default: /v3
+      default: /keystone/v3
       healthcheck: /healthcheck
       public: /keystone/v3
+      admin: /v3
+      internal: /v3
     scheme:
       public: https
     port:
