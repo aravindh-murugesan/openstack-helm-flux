@@ -72,3 +72,22 @@ extraObjects:
       grantOption: true
       host: "%"
       retryInterval: 5s
+  - apiVersion: autoscaling/v2
+    kind: HorizontalPodAutoscaler
+    metadata:
+      name: placement-api-hpa
+      namespace: "{{ .Release.Namespace }}"
+    spec:
+      scaleTargetRef:
+        apiVersion: apps/v1
+        kind: Deployment
+        name: placement-api
+      minReplicas: 3
+      maxReplicas: 10
+      metrics:
+        - type: Resource
+          resource:
+            name: cpu
+            target:
+              type: Utilization
+              averageUtilization: 75
