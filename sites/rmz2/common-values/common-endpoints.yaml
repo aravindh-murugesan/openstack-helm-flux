@@ -43,7 +43,7 @@ endpoints:
         public: 443
     host_fqdn_override:
       public:
-        host: "placement.in-rmz2.com"
+        host: "placement.rmz2.com"
   identity:
     auth:
       admin:
