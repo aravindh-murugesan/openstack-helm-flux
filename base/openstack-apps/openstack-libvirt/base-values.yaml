@@ -1,0 +1,16 @@
+release_group: libvirt
+
+network:
+  backend:
+    - ovn
+
+dependencies:
+  dynamic:
+    targeted:
+      openvswitch:
+        libvirt:
+          pod: []
+
+conf:
+  ceph:
+    enabled: false
