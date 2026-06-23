@@ -7,7 +7,8 @@ metadata:
   labels:
     openstack-helm-flux/component-group: operators
 spec:
-  interval: 60m
+  interval: 30m
+  targetNamespace: cnpg-system
   timeout: 10m
   sourceRef:
     kind: GitRepository

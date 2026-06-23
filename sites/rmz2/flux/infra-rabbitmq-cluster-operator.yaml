@@ -8,6 +8,7 @@ metadata:
     openstack-helm-flux/component-group: operators
 spec:
   interval: 30m
+  targetNamespace: rabbitmq-system
   sourceRef:
     kind: GitRepository
     name: openstack-helm-flux-repo

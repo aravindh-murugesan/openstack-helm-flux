@@ -7,7 +7,8 @@ metadata:
   labels:
     openstack-helm-flux/component-group: csi
 spec:
-  interval: 60m
+  interval: 30m
+  targetNamespace: local-path-storage
   timeout: 10m
   sourceRef:
     kind: GitRepository
