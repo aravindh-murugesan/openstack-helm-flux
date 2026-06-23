@@ -12,6 +12,7 @@ spec:
   targetNamespace: openstack
   dependsOn:
     - name: infra-local-path-provisioner
+      namespace: flux-system
   sourceRef:
     kind: GitRepository
     name: openstack-helm-flux-repo

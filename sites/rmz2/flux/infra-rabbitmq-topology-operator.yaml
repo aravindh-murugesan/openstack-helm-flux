@@ -9,6 +9,7 @@ spec:
   interval: 30m
   dependsOn:
     - name: infra-rabbitmq-cluster-operator
+      namespace: flux-system
   sourceRef:
     kind: GitRepository
     name: openstack-helm-flux-repo

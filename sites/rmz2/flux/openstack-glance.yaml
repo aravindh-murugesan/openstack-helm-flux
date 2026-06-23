@@ -11,8 +11,11 @@ spec:
   targetNamespace: openstack
   dependsOn:
     - name: openstack-common-values
+      namespace: openstack
     - name: openstack-rabbitmq
+      namespace: openstack
     - name: openstack-mariadb
+      namespace: openstack
   sourceRef:
     kind: GitRepository
     name: openstack-helm-flux-repo
@@ -36,8 +39,11 @@ spec:
   timeout: 30m
   dependsOn:
     - name: infra-envoy-gateway
+      namespace: flux-system
     - name: openstack-memcached
+      namespace: openstack
     - name: openstack-keystone
+      namespace: openstack
   chart:
     spec:
       chart: glance
