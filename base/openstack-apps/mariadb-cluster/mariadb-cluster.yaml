@@ -1,0 +1,106 @@
+apiVersion: k8s.mariadb.com/v1alpha1
+kind: MariaDB
+metadata:
+  name: mariadb
+spec:
+  replicas: 3
+  rootPasswordSecretKeyRef:
+    name: mariadb-root-password
+    key: password
+  username: mariadb
+  database: mariadb
+  image: docker-registry1.mariadb.com/library/mariadb:12.3.2-noble
+  storage:
+    size: "30Gi"
+    storageClassName: "local-path"
+    resizeInUseVolumes: true
+    waitForVolumeResize: true
+
+  resources:
+    limits:
+      cpu: 2048m
+      memory: 6Gi
+    requests:
+      cpu: 512m
+      memory: 1Gi
+
+  galera:
+    enabled: true
+    sst: mariabackup
+    recovery:
+      enabled: true
+    replicaThreads: 4
+    config:
+      reuseStorageVolume: true
+
+  replication:
+    enabled: false
+
+  service:
+    type: ClusterIP
+  connection:
+    secretName: mariadb-conn
+    secretTemplate:
+      key: dsn
+
+  primaryService:
+    type: ClusterIP
+  primaryConnection:
+    secretName: mariadb-conn-primary
+    secretTemplate:
+      key: dsn
+
+  secondaryService:
+    type: ClusterIP
+  secondaryConnection:
+    secretName: mariadb-conn-secondary
+    secretTemplate:
+      key: dsn
+
+  updateStrategy:
+    type: RollingUpdate
+
+  myCnf: |
+    [mariadb]
+    bind_address=0.0.0.0
+    binlog_format=ROW
+    default_storage_engine=InnoDB
+    ignore_db_dirs=lost+found
+    innodb_autoinc_lock_mode=2
+    innodb_buffer_pool_size=4G
+    innodb_buffer_pool_instances=4
+    innodb_doublewrite=1
+    innodb_file_per_table=1
+    innodb_flush_log_at_trx_commit=1
+    innodb_flush_method=O_DIRECT
+    innodb_io_capacity=1000
+    innodb_log_buffer_size=256M
+    innodb_log_file_size=512M
+    innodb_old_blocks_time=1000
+    innodb_read_io_threads=8
+    innodb_rollback_on_timeout=1
+    innodb_stats_on_metadata=0
+    innodb_write_io_threads=8
+    interactive_timeout=360
+    max_allowed_packet=256M
+    max_connect_errors=1000000
+    max_connections=2048
+    max_heap_table_size=32M
+    net_read_timeout=360
+    net_write_timeout=360
+    open_files_limit=164679
+    performance_schema=ON
+    query_cache_size=0
+    query_cache_type=OFF
+    skip_name_resolve
+    table_definition_cache=4096
+    table_open_cache=10240
+    thread_cache_size=50
+    tmp_table_size=32M
+    wait_timeout=360
+    wsrep_provider_options="gcache.size=2048M;gcs.fc_limit=128"
+    wsrep_retry_autocommit=3
+    wsrep_slave_threads=8
+
+  metrics:
+    enabled: false

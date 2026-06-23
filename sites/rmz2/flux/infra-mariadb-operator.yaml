@@ -1,0 +1,22 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: infra-mariadb-operator
+  namespace: flux-system
+spec:
+  interval: 1440m
+  targetNamespace: mariadb-system
+  releaseName: mariadb-operator
+  dependsOn:
+    - name: infra-mariadb-operator-crds
+      namespace: flux-system
+  chart:
+    spec:
+      chart: mariadb-operator
+      version: "*"
+      sourceRef:
+        kind: HelmRepository
+        name: mariadb-operator
+        namespace: flux-system
+  install:
+    createNamespace: true
