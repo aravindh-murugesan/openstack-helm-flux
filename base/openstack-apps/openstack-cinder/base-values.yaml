@@ -1,0 +1,190 @@
+conf:
+  backends:
+    rbd1: null
+  cinder:
+    DEFAULT:
+      enabled_backends: ""
+    oslo_messaging_rabbit:
+      rabbit_ha_queues: false
+      rabbit_quorum_queues: true
+      rabbit_transient_quorum_queue: true
+      use_queue_manager: true
+
+pod:
+  security_context:
+    cinder_backup:
+      container:
+        cinder_backup:
+          privileged: true
+          runAsUser: 0
+          readOnlyRootFilesystem: true
+    cinder_volume:
+      container:
+        cinder_volume:
+          privileged: true
+          runAsUser: 0
+          readOnlyRootFilesystem: true
+    cinder_scheduler:
+      container:
+        cinder_volume:
+          privileged: true
+  mounts:
+    cinder_volume:
+      cinder_volume:
+        volumes: &iscsi_volumes
+          - name: etciscsi
+            hostPath:
+              path: /etc/iscsi
+          - name: dev
+            hostPath:
+              path: /dev
+          - name: sys
+            hostPath:
+              path: /sys
+          - name: run
+            hostPath:
+              path: /run
+        volumeMounts: &iscsi_mounts
+          - name: etciscsi
+            mountPath: /etc/iscsi
+          - name: dev
+            mountPath: /dev
+          - name: sys
+            mountPath: /sys
+          - name: run
+            mountPath: /run
+    cinder_backup:
+      cinder_backup:
+        volumes: *iscsi_volumes
+        volumeMounts: *iscsi_mounts
+  useHostNetwork:
+    volume: true
+    backup: true
+  replicas:
+    api: 3
+    volume: 1
+    scheduler: 3
+    backup: 1
+  lifecycle:
+    disruption_budget:
+      api:
+        min_available: 1
+      scheduler:
+        min_available: 1
+
+  resources:
+    enabled: true
+    api:
+      requests:
+        memory: "128Mi"
+        cpu: "100m"
+      limits:
+        memory: "1024Mi"
+        cpu: "2000m"
+    scheduler:
+      requests:
+        memory: "128Mi"
+        cpu: "100m"
+      limits:
+        memory: "1024Mi"
+        cpu: "2000m"
+    volume:
+      requests:
+        memory: "128Mi"
+        cpu: "100m"
+      limits:
+        memory: "1024Mi"
+        cpu: "2000m"
+
+network:
+  api:
+    ingress:
+      public: false
+
+dependencies:
+  dynamic:
+    common:
+      local_image_registry:
+        jobs: null
+  static:
+    api:
+      jobs:
+        - cinder-db-sync
+        - cinder-ks-user
+        - cinder-ks-endpoints
+      services:
+        - endpoint: internal
+          service: oslo_db
+        - endpoint: internal
+          service: identity
+    db_sync:
+      jobs: null
+    backup:
+      jobs:
+        - cinder-db-sync
+        - cinder-ks-user
+        - cinder-ks-endpoints
+    db_purge:
+      jobs:
+        - cinder-db-sync
+        - cinder-ks-user
+        - cinder-ks-endpoints
+    scheduler:
+      jobs:
+        - cinder-db-sync
+        - cinder-ks-user
+        - cinder-ks-endpoints
+    volume:
+      jobs:
+        - cinder-db-sync
+        - cinder-ks-user
+        - cinder-ks-endpoints
+    volume_usage_audit:
+      jobs:
+        - cinder-db-sync
+        - cinder-ks-user
+        - cinder-ks-endpoints
+
+secrets:
+  identity:
+    admin: cinder-keystone-admin
+    cinder: cinder-keystone-user
+    nova: cinder-keystone-nova
+    swift: cinder-keystone-swift
+    service: cinder-keystone-service
+    test: cinder-keystone-test
+    glance: cinder-keystone-glance
+    neutron: cinder-keystone-neutron
+    placement: cinder-keystone-placement
+    skyline: cinder-keystone-skyline
+
+manifests:
+  job_backup_storage_init: false
+  job_bootstrap: false
+  job_clean: false
+  job_db_init: false
+  job_db_drop: false
+  job_rabbit_init: false
+  job_storage_init: false
+  pod_rally_test: false
+  secret_db: false
+  secret_ingress_tls: false
+  secret_rabbitmq: false
+  secret_registry: false
+  service_ingress_api: false
+  deployment_backup: false
+  deployment_volume: false
+  statefulset_volume: false
+  secret_keystone: true
+  secret_ks_etc: true
+  configmap_bin: true
+
+labels:
+  volume:
+    node_selector_key: openstack-compute-node
+    node_selector_value: enabled
+  backup:
+    node_selector_key: openstack-compute-node
+    node_selector_value: enabled
+
+extraObjects: []
