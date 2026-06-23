@@ -7,9 +7,7 @@ endpoints:
         public: 443
     host_fqdn_override:
       public:
-        host: "cloud.rmz1.com"
-    path:
-      public: /glance
+        host: "glance.rmz1.com"
   identity:
     auth:
       admin:
@@ -29,13 +27,7 @@ endpoints:
         project_domain_name: service
     host_fqdn_override:
       public:
-        host: "cloud.rmz1.com"
-    path:
-      default: /keystone/v3
-      healthcheck: /healthcheck
-      public: /keystone/v3
-      admin: /v3
-      internal: /v3
+        host: "keystone.rmz1.com"
     scheme:
       public: https
     port:
