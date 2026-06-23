@@ -1,0 +1,74 @@
+images:
+  pull_policy: IfNotPresent
+  tags:
+    placement: "quay.io/airshipit/placement:2026.1-ubuntu_noble"
+    ks_user: "quay.io/airshipit/openstack-client:2026.1-ubuntu_noble"
+    ks_service: "quay.io/airshipit/openstack-client:2026.1-ubuntu_noble"
+    ks_endpoints: "quay.io/airshipit/openstack-client:2026.1-ubuntu_noble"
+    db_init: "quay.io/airshipit/openstack-client:2026.1-ubuntu_noble"
+    db_drop: "quay.io/airshipit/openstack-client:2026.1-ubuntu_noble"
+    placement_db_sync: "quay.io/airshipit/placement:2026.1-ubuntu_noble"
+    dep_check: "quay.io/airshipit/kubernetes-entrypoint:latest-ubuntu_jammy"
+    image_repo_sync: "docker.io/docker:17.07.0"
+
+extraObjects:
+  - apiVersion: gateway.networking.k8s.io/v1
+    kind: HTTPRoute
+    metadata:
+      name: placement-route
+      namespace: "{{ .Release.Namespace }}"
+    spec:
+      hostnames:
+        - "{{ .Values.endpoints.placement.host_fqdn_override.public.host }}"
+      parentRefs:
+        - name: tata-internal-gw
+          namespace: envoy-gateway-system
+      rules:
+        - matches:
+            - path:
+                type: PathPrefix
+                value: /
+          backendRefs:
+            - name: placement-api
+              port: 8778
+  - apiVersion: k8s.mariadb.com/v1alpha1
+    kind: Database
+    metadata:
+      name: placement
+    spec:
+      mariaDbRef:
+        name: mariadb
+        waitForIt: true
+      characterSet: utf8
+      collate: utf8_general_ci
+      retryInterval: 5s
+  - apiVersion: k8s.mariadb.com/v1alpha1
+    kind: User
+    metadata:
+      name: placement
+    spec:
+      mariaDbRef:
+        name: mariadb
+        waitForIt: true
+      passwordSecretKeyRef:
+        name: placement-db-password
+        key: password
+      maxUserConnections: 0
+      host: "%"
+      retryInterval: 5s
+  - apiVersion: k8s.mariadb.com/v1alpha1
+    kind: Grant
+    metadata:
+      name: placement-grant
+    spec:
+      mariaDbRef:
+        name: mariadb
+        waitForIt: true
+      privileges:
+        - "ALL"
+      database: "placement"
+      table: "*"
+      username: placement
+      grantOption: true
+      host: "%"
+      retryInterval: 5s

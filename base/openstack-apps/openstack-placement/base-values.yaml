@@ -1,0 +1,41 @@
+release_group: placement
+
+network:
+  api:
+    ingress:
+      public: false
+
+pod:
+  replicas:
+    api: 3
+  resources:
+    enabled: true
+    api:
+      requests:
+        memory: "128Mi"
+        cpu: "256m"
+      limits:
+        memory: "768Mi"
+        cpu: "1000m"
+
+dependencies:
+  static:
+    api:
+      jobs:
+        - placement-ks-service
+        - placement-ks-user
+        - placement-ks-endpoints
+    db_sync:
+      jobs: []
+
+manifests:
+  deployment: true
+  job_image_repo_sync: true
+  job_db_init: false
+  job_db_sync: true
+  job_ks_endpoints: true
+  job_ks_service: true
+  job_ks_user: true
+  ingress: false
+  service_ingress: false
+  pdb: true
