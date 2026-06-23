@@ -1,21 +1,3 @@
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-# Default values for cinder.
-# This is a YAML-formatted file.
-# Declare name/value pairs to be passed into your templates.
-# name: value
-
----
 storage: ceph
 
 labels:
@@ -38,7 +20,7 @@ labels:
     node_selector_key: openstack-control-plane
     node_selector_value: enabled
 
-release_group: null
+release_group:
 
 images:
   tags:
@@ -56,9 +38,11 @@ images:
     cinder_volume: quay.io/airshipit/cinder:2026.1-ubuntu_noble
     cinder_volume_usage_audit: quay.io/airshipit/cinder:2026.1-ubuntu_noble
     cinder_db_purge: quay.io/airshipit/cinder:2026.1-ubuntu_noble
-    cinder_storage_init: quay.io/airshipit/ceph-config-helper:latest-ubuntu_jammy
+    cinder_storage_init: 
+      quay.io/airshipit/ceph-config-helper:latest-ubuntu_jammy
     cinder_backup: quay.io/airshipit/cinder:2026.1-ubuntu_noble
-    cinder_backup_storage_init: quay.io/airshipit/ceph-config-helper:latest-ubuntu_jammy
+    cinder_backup_storage_init: 
+      quay.io/airshipit/ceph-config-helper:latest-ubuntu_jammy
     dep_check: quay.io/airshipit/kubernetes-entrypoint:latest-ubuntu_noble
     image_repo_sync: docker.io/docker:17.07.0
   pull_policy: "IfNotPresent"
@@ -87,7 +71,7 @@ pod:
     api:
       cinder-api:
         liveness:
-          enabled: True
+          enabled: true
           params:
             initialDelaySeconds: 5
             periodSeconds: 10
@@ -95,7 +79,7 @@ pod:
             failureThreshold: 3
             successThreshold: 1
         readiness:
-          enabled: True
+          enabled: true
           params:
             initialDelaySeconds: 30
   security_context:
@@ -207,48 +191,48 @@ pod:
     cinder:
       enabled: false
       tolerations:
-      - key: node-role.kubernetes.io/master
-        operator: Exists
-        effect: NoSchedule
-      - key: node-role.kubernetes.io/control-plane
-        operator: Exists
-        effect: NoSchedule
+        - key: node-role.kubernetes.io/master
+          operator: Exists
+          effect: NoSchedule
+        - key: node-role.kubernetes.io/control-plane
+          operator: Exists
+          effect: NoSchedule
   useHostNetwork:
     volume: false
     backup: false
   mounts:
     cinder_api:
-      init_container: null
+      init_container:
       cinder_api:
         volumeMounts:
         volumes:
     cinder_scheduler:
-      init_container: null
+      init_container:
       cinder_scheduler:
         volumeMounts:
         volumes:
     cinder_volume:
-      init_container: null
+      init_container:
       cinder_volume:
         volumeMounts:
         volumes:
     cinder_volume_usage_audit:
-      init_container: null
+      init_container:
       cinder_volume_usage_audit:
         volumeMounts:
         volumes:
     cinder_db_purge:
-      init_container: null
+      init_container:
       cinder_db_purge:
         volumeMounts:
         volumes:
     cinder_backup:
-      init_container: null
+      init_container:
       cinder_backup:
         volumeMounts:
         volumes:
     cinder_tests:
-      init_container: null
+      init_container:
       cinder_tests:
         volumeMounts:
         volumes:
@@ -291,21 +275,21 @@ pod:
     api:
       requests:
         memory: "128Mi"
-        cpu: "100m"
+        cpu: "1000m"
       limits:
         memory: "1024Mi"
         cpu: "2000m"
     scheduler:
       requests:
         memory: "128Mi"
-        cpu: "100m"
+        cpu: "1000m"
       limits:
         memory: "1024Mi"
         cpu: "2000m"
     volume:
       requests:
         memory: "128Mi"
-        cpu: "100m"
+        cpu: "1000m"
       limits:
         memory: "1024Mi"
         cpu: "2000m"
@@ -313,105 +297,105 @@ pod:
       volume_usage_audit:
         requests:
           memory: "128Mi"
-          cpu: "100m"
+          cpu: "1000m"
         limits:
           memory: "1024Mi"
           cpu: "2000m"
       bootstrap:
         requests:
           memory: "128Mi"
-          cpu: "100m"
+          cpu: "1000m"
         limits:
           memory: "1024Mi"
           cpu: "2000m"
       rabbit_init:
         requests:
           memory: "128Mi"
-          cpu: "100m"
+          cpu: "1000m"
         limits:
           memory: "1024Mi"
           cpu: "2000m"
       db_init:
         requests:
           memory: "128Mi"
-          cpu: "100m"
+          cpu: "1000m"
         limits:
           memory: "1024Mi"
           cpu: "2000m"
       db_sync:
         requests:
           memory: "128Mi"
-          cpu: "100m"
+          cpu: "1000m"
         limits:
           memory: "1024Mi"
           cpu: "2000m"
       db_drop:
         requests:
           memory: "128Mi"
-          cpu: "100m"
+          cpu: "1000m"
         limits:
           memory: "1024Mi"
           cpu: "2000m"
       db_purge:
         requests:
           memory: "128Mi"
-          cpu: "100m"
+          cpu: "1000m"
         limits:
           memory: "1024Mi"
           cpu: "2000m"
       clean:
         requests:
           memory: "128Mi"
-          cpu: "100m"
+          cpu: "1000m"
         limits:
           memory: "1024Mi"
           cpu: "2000m"
       backup_storage_init:
         requests:
           memory: "128Mi"
-          cpu: "100m"
+          cpu: "1000m"
         limits:
           memory: "1024Mi"
           cpu: "2000m"
       storage_init:
         requests:
           memory: "128Mi"
-          cpu: "100m"
+          cpu: "1000m"
         limits:
           memory: "1024Mi"
           cpu: "2000m"
       ks_endpoints:
         requests:
           memory: "128Mi"
-          cpu: "100m"
+          cpu: "1000m"
         limits:
           memory: "1024Mi"
           cpu: "2000m"
       ks_service:
         requests:
           memory: "128Mi"
-          cpu: "100m"
+          cpu: "1000m"
         limits:
           memory: "1024Mi"
           cpu: "2000m"
       ks_user:
         requests:
           memory: "128Mi"
-          cpu: "100m"
+          cpu: "1000m"
         limits:
           memory: "1024Mi"
           cpu: "2000m"
       tests:
         requests:
           memory: "128Mi"
-          cpu: "100m"
+          cpu: "1000m"
         limits:
           memory: "1024Mi"
           cpu: "2000m"
       image_repo_sync:
         requests:
           memory: "128Mi"
-          cpu: "100m"
+          cpu: "1000m"
         limits:
           memory: "1024Mi"
           cpu: "2000m"
@@ -477,12 +461,12 @@ ceph_client:
   external_ceph:
     # Only when enable_external_ceph_backend is true and rbd_user is NOT null
     # secret for external ceph keyring will be created.
-    rbd_user: null
-    rbd_user_keyring: null
-    configmap: null
+    rbd_user:
+    rbd_user_keyring:
+    configmap:
     conf:
-      global: null
-      osd: null
+      global:
+      osd:
 conf:
   paste:
     composite:osapi_volume:
@@ -492,13 +476,17 @@ conf:
       /v3: openstack_volume_api_v3
     composite:openstack_volume_api_v3:
       use: call:cinder.api.middleware.auth:pipeline_factory
-      noauth: cors http_proxy_to_wsgi request_id faultwrap sizelimit osprofiler noauth apiv3
-      keystone: cors http_proxy_to_wsgi request_id faultwrap sizelimit osprofiler authtoken audit keystonecontext apiv3
-      keystone_nolimit: cors http_proxy_to_wsgi request_id faultwrap sizelimit osprofiler authtoken audit keystonecontext apiv3
+      noauth: cors http_proxy_to_wsgi request_id faultwrap sizelimit osprofiler 
+        noauth apiv3
+      keystone: cors http_proxy_to_wsgi request_id faultwrap sizelimit 
+        osprofiler authtoken audit keystonecontext apiv3
+      keystone_nolimit: cors http_proxy_to_wsgi request_id faultwrap sizelimit 
+        osprofiler authtoken audit keystonecontext apiv3
     filter:request_id:
       paste.filter_factory: oslo_middleware.request_id:RequestId.factory
     filter:http_proxy_to_wsgi:
-      paste.filter_factory: oslo_middleware.http_proxy_to_wsgi:HTTPProxyToWSGI.factory
+      paste.filter_factory: 
+        oslo_middleware.http_proxy_to_wsgi:HTTPProxyToWSGI.factory
     filter:cors:
       paste.filter_factory: oslo_middleware.cors:filter_factory
       oslo_config_project: cinder
@@ -509,7 +497,8 @@ conf:
     filter:noauth:
       paste.filter_factory: cinder.api.middleware.auth:NoAuthMiddleware.factory
     filter:sizelimit:
-      paste.filter_factory: oslo_middleware.sizelimit:RequestBodySizeLimiter.factory
+      paste.filter_factory: 
+        oslo_middleware.sizelimit:RequestBodySizeLimiter.factory
     app:apiv3:
       paste.app_factory: cinder.api.v3.router:APIRouter.factory
     app:healthcheck:
@@ -521,7 +510,8 @@ conf:
     app:osvolumeversionapp:
       paste.app_factory: cinder.api.versions:Versions.factory
     filter:keystonecontext:
-      paste.filter_factory: cinder.api.middleware.auth:CinderKeystoneContext.factory
+      paste.filter_factory: 
+        cinder.api.middleware.auth:CinderKeystoneContext.factory
     filter:authtoken:
       paste.filter_factory: keystonemiddleware.auth_token:filter_factory
     filter:audit:
@@ -813,7 +803,7 @@ conf:
     override:
     append:
     monitors: []
-    admin_keyring: null
+    admin_keyring:
     pools:
       backup:
         replication: 3
@@ -849,7 +839,7 @@ conf:
       host: cinder-volume-worker
       # NOTE(portdirect): the bind port should not be defined, and is manipulated
       # via the endpoints section.
-      osapi_volume_listen_port: null
+      osapi_volume_listen_port:
       enabled_backends: "rbd1"
       default_volume_type: "rbd1"
       # NOTE(portdirect): "cinder.backup.drivers.ceph"  and
@@ -1095,11 +1085,11 @@ conversion:
 backup:
   external_ceph_rbd:
     enabled: false
-    admin_keyring: null
-    configmap: null
+    admin_keyring:
+    configmap:
     conf:
-      global: null
-      osd: null
+      global:
+      osd:
   posix:
     volume:
       class_name: general
@@ -1141,7 +1131,7 @@ dependencies:
         - endpoint: internal
           service: volumev3
     backup_storage_init:
-      jobs: null
+      jobs:
     bootstrap:
       services:
         - endpoint: internal
@@ -1154,7 +1144,7 @@ dependencies:
             application: cinder
             component: volume
     clean:
-      jobs: null
+      jobs:
     db_drop:
       services:
         - endpoint: internal
@@ -1212,7 +1202,7 @@ dependencies:
         - endpoint: internal
           service: volumev3
     storage_init:
-      jobs: null
+      jobs:
     tests:
       services:
         - endpoint: internal
@@ -1301,7 +1291,7 @@ endpoints:
       internal: docker-registry
       node: localhost
     host_fqdn_override:
-      default: null
+      default:
     port:
       registry:
         node: 5000
@@ -1316,10 +1306,10 @@ endpoints:
     hosts:
       default: localhost
     host_fqdn_override:
-      default: null
+      default:
     port:
       registry:
-        default: null
+        default:
   identity:
     name: keystone
     auth:
@@ -1382,7 +1372,7 @@ endpoints:
       default: keystone
       internal: keystone-api
     host_fqdn_override:
-      default: null
+      default:
     path:
       default: /v3
     scheme:
@@ -1397,9 +1387,9 @@ endpoints:
       default: glance-api
       public: glance
     host_fqdn_override:
-      default: null
+      default:
     path:
-      default: null
+      default:
     scheme:
       default: http
     port:
@@ -1412,7 +1402,7 @@ endpoints:
       default: cinder-api
       public: cinder
     host_fqdn_override:
-      default: null
+      default:
       # NOTE(portdirect): this chart supports TLS for fqdn over-ridden public
       # endpoints using the following format:
       # public:
@@ -1443,7 +1433,7 @@ endpoints:
     hosts:
       default: mariadb
     host_fqdn_override:
-      default: null
+      default:
     path: /cinder
     scheme: mysql+pymysql
     port:
@@ -1466,7 +1456,7 @@ endpoints:
     hosts:
       default: rabbitmq
     host_fqdn_override:
-      default: null
+      default:
     path: /cinder
     scheme: rabbit
     port:
@@ -1481,23 +1471,23 @@ endpoints:
       # automatically with a random value, but to take advantage of
       # this feature all services should be set to use the same key,
       # and memcache service.
-      memcache_secret_key: null
+      memcache_secret_key:
     hosts:
       default: memcached
     host_fqdn_override:
-      default: null
+      default:
     port:
       memcache:
         default: 11211
   fluentd:
-    namespace: null
+    namespace:
     name: fluentd
     hosts:
       default: fluentd-logging
     host_fqdn_override:
-      default: null
+      default:
     path:
-      default: null
+      default:
     scheme: 'http'
     port:
       service:
@@ -1510,16 +1500,16 @@ endpoints:
     hosts:
       default: kube-dns
     host_fqdn_override:
-      default: null
+      default:
     path:
-      default: null
+      default:
     scheme: http
     port:
       dns:
         default: 53
         protocol: UDP
   ingress:
-    namespace: null
+    namespace:
     name: ingress
     hosts:
       default: ingress
@@ -1587,30 +1577,3 @@ manifests:
 # -- Array of extra K8s manifests to deploy
 ## Note: Supports use of custom Helm templates
 extraObjects: []
-  # - apiVersion: secrets-store.csi.x-k8s.io/v1
-  #   kind: SecretProviderClass
-  #   metadata:
-  #     name: osh-secrets-store
-  #   spec:
-  #     provider: aws
-  #     parameters:
-  #       objects: |
-  #         - objectName: "osh"
-  #           objectType: "secretsmanager"
-  #           jmesPath:
-  #               - path: "client_id"
-  #                 objectAlias: "client_id"
-  #               - path: "client_secret"
-  #                 objectAlias: "client_secret"
-  #     secretObjects:
-  #     - data:
-  #       - key: client_id
-  #         objectName: client_id
-  #       - key: client_secret
-  #         objectName: client_secret
-  #       secretName: osh-secrets-store
-  #       type: Opaque
-  #       labels:
-  #         app.kubernetes.io/part-of: osh
-...
-

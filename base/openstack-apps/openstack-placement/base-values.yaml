@@ -13,7 +13,7 @@ pod:
     api:
       requests:
         memory: "128Mi"
-        cpu: "256m"
+        cpu: "500m"
       limits:
         memory: "768Mi"
         cpu: "1000m"

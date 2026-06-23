@@ -14,13 +14,13 @@ pod:
     memcached:
       memcached:
         readiness:
-          enabled: True
+          enabled: true
           params:
             initialDelaySeconds: 0
             periodSeconds: 10
             timeoutSeconds: 5
         liveness:
-          enabled: True
+          enabled: true
           params:
             initialDelaySeconds: 10
             periodSeconds: 15
@@ -34,7 +34,7 @@ pod:
         cpu: "2000m"
         memory: "2048Mi"
       requests:
-        cpu: "500m"
+        cpu: "1000m"
         memory: "128Mi"
 
 extraObjects: []

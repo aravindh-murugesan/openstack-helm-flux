@@ -3,7 +3,7 @@ release_group: glance
 bootstrap:
   enabled: true
   ks_user: admin
-  script: null
+  script:
   structured:
     images: []
 
@@ -37,7 +37,7 @@ pod:
     api:
       requests:
         memory: "512Mi"
-        cpu: "500m"
+        cpu: "1000m"
       limits:
         memory: "2048Mi"
         cpu: "2000m"
@@ -46,7 +46,7 @@ dependencies:
   dynamic:
     common:
       local_image_registry:
-        jobs: null
+        jobs:
   static:
     db_sync:
       jobs:

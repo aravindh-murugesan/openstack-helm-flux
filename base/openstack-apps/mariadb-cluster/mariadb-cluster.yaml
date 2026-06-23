@@ -21,7 +21,7 @@ spec:
       cpu: 2048m
       memory: 6Gi
     requests:
-      cpu: 512m
+      cpu: 1024m
       memory: 1Gi
 
   galera:
