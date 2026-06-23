@@ -34,7 +34,7 @@ endpoints:
         public: 443
     host_fqdn_override:
       public:
-        host: "glance.rmz1.com"
+        host: "glance.rmz2.com"
   placement:
     scheme:
       public: https
@@ -79,7 +79,7 @@ endpoints:
         project_domain_name: service
     host_fqdn_override:
       public:
-        host: "keystone.rmz1.com"
+        host: "keystone.rmz2.com"
     scheme:
       public: https
     port:
