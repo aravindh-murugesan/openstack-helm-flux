@@ -1,0 +1,85 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: openstack-cinder-values
+  namespace: openstack
+  labels:
+    openstack-helm-flux/component-group: openstack
+spec:
+  interval: 30m
+  targetNamespace: openstack
+  dependsOn:
+    - name: openstack-common-values
+      namespace: openstack
+    - name: openstack-rabbitmq
+      namespace: openstack
+    - name: openstack-mariadb
+      namespace: openstack
+  sourceRef:
+    kind: GitRepository
+    name: openstack-helm-flux-repo
+    namespace: flux-system
+  path: ./sites/rmz2/openstack-apps/openstack-cinder
+  prune: true
+  wait: true
+
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: openstack-cinder
+  namespace: openstack
+  labels:
+    openstack-helm-flux/component-group: openstack
+spec:
+  interval: 10m
+  targetNamespace: openstack
+  releaseName: cinder
+  timeout: 30m
+  dependsOn:
+    - name: infra-envoy-gateway
+      namespace: flux-system
+    - name: openstack-memcached
+      namespace: openstack
+    - name: openstack-keystone
+      namespace: openstack
+  chart:
+    spec:
+      chart: cinder
+      version: 2026.1.5+a2a343968
+      sourceRef:
+        kind: HelmRepository
+        name: openstack-helm-repo
+        namespace: flux-system
+  install:
+    timeout: 30m
+    disableWait: true
+    disableWaitForJobs: true
+  upgrade:
+    timeout: 45m
+    disableWait: true
+    disableWaitForJobs: true
+    force: true
+  valuesFrom:
+    - kind: ConfigMap
+      name: openstack-common-endpoints
+      valuesKey: values.yaml
+    - kind: ConfigMap
+      name: openstack-helm-flux-cinder-values
+      valuesKey: values.yaml
+    - kind: ConfigMap
+      name: openstack-helm-flux-cinder-values-override
+      valuesKey: values.yaml
+    - kind: Secret
+      name: cinder-db-password
+      valuesKey: password
+      targetPath: endpoints.oslo_db.auth.cinder.password
+    - kind: Secret
+      name: cinder-rabbitmq-password
+      valuesKey: password
+      targetPath: endpoints.oslo_messaging.auth.cinder.password
+    - kind: Secret
+      name: cinder-keystone-password
+      valuesKey: password
+      targetPath: endpoints.identity.auth.cinder.password

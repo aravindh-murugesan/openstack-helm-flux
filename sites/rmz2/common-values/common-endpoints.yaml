@@ -1,4 +1,31 @@
 endpoints:
+  volume:
+    scheme:
+      public: https
+    port:
+      api:
+        public: 443
+    host_fqdn_override:
+      public:
+        host: "cinder.in-rmz2.com"
+  volumev2:
+    scheme:
+      public: https
+    port:
+      api:
+        public: 443
+    host_fqdn_override:
+      public:
+        host: "cinder.in-rmz2.com"
+  volumev3:
+    scheme:
+      public: https
+    port:
+      api:
+        public: 443
+    host_fqdn_override:
+      public:
+        host: "cinder.in-rmz2.com"
   image:
     scheme:
       public: https
@@ -23,6 +50,13 @@ endpoints:
         project_name: service
         username: glance
         password: "3wSbcLV42og3IPhq4dN9wMCzPiGUHKiN"
+        user_domain_name: service
+        project_domain_name: service
+      cinder:
+        role: admin,service
+        region_name: RMZ
+        project_name: service
+        username: cinder
         user_domain_name: service
         project_domain_name: service
     host_fqdn_override:
