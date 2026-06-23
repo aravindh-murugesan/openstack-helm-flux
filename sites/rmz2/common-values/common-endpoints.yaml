@@ -43,6 +43,8 @@ endpoints:
   oslo_messaging:
     hosts:
       default: rabbitmq
+    statefulset:
+      replicas: 3
   oslo_cache:
     hosts:
       default: memcached
