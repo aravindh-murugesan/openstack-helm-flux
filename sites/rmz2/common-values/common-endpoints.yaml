@@ -48,7 +48,7 @@ endpoints:
       default: mariadb-primary
   oslo_messaging:
     hosts:
-      default: rabbitmq-cluster
+      default: rabbitmq
   oslo_cache:
     hosts:
       default: memcached
