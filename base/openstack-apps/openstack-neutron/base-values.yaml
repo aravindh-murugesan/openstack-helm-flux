@@ -31,7 +31,7 @@ conf:
       rpc_response_timeout: 600
       router_distributed: True
       default_availability_zones: nova
-      service_plugins: qos,ovn-router,segments,trunk,log,taas,tapmirror,pvlan
+      service_plugins: qos,ovn-router,segments,trunk,log,taas,tapmirror
       l3_ha_network_type: geneve
     ovn:
       ovn_emit_need_to_frag: true
