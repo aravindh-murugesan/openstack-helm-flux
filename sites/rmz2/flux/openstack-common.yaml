@@ -1,0 +1,17 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: openstack-common-values
+  namespace: openstack
+  labels:
+    openstack-helm-flux/component-group: openstack-infra
+spec:
+  interval: 30m
+  sourceRef:
+    kind: GitRepository
+    name: openstack-helm-flux-repo
+    namespace: flux-system
+  path: ./sites/rmz2/common-values
+  prune: true
+  wait: true

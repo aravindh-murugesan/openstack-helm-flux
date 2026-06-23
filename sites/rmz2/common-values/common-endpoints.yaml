@@ -1,0 +1,53 @@
+endpoints:
+  image:
+    scheme:
+      public: https
+    port:
+      api:
+        public: 443
+    host_fqdn_override:
+      public:
+        host: "glance.in-rmz2.com"
+  identity:
+    auth:
+      admin:
+        region_name: RMZ
+        username: admin
+        password: "OxP90eVF9pUPSX222S1ZRlAWHcPEo0UD"
+        project_name: admin
+        user_domain_name: default
+        project_domain_name: default
+      glance:
+        role: admin,service
+        region_name: RMZ
+        project_name: service
+        username: glance
+        password: "3wSbcLV42og3IPhq4dN9wMCzPiGUHKiN"
+        user_domain_name: service
+        project_domain_name: service
+    host_fqdn_override:
+      public:
+        host: "keystone.in-rmz2.com"
+    scheme:
+      public: https
+    port:
+      api:
+        default: 80
+        public: 443
+        internal: 5000
+        service: 5000
+        admin: 5000
+  oslo_db:
+    hosts:
+      default: mariadb-primary
+  oslo_messaging:
+    hosts:
+      default: rabbitmq-cluster
+  oslo_cache:
+    hosts:
+      default: memcached
+    host_fqdn_override:
+      default: null
+    statefulSet:
+      replicas: 3
+      name: memcached
