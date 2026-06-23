@@ -19,3 +19,4 @@ resources:
   - ./flux/openstack-common.yaml
   - ./flux/openstack-keystone.yaml
   - ./flux/openstack-glance.yaml
+  - ./flux/openstack-cinder.yaml

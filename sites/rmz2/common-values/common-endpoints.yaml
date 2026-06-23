@@ -57,6 +57,7 @@ endpoints:
         region_name: RMZ
         project_name: service
         username: cinder
+        password: "3n98MGCQhtVC0j4enByODdzkqYcg8pSc"
         user_domain_name: service
         project_domain_name: service
     host_fqdn_override:

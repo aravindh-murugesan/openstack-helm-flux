@@ -79,7 +79,3 @@ spec:
       name: cinder-rabbitmq-password
       valuesKey: password
       targetPath: endpoints.oslo_messaging.auth.cinder.password
-    - kind: Secret
-      name: cinder-keystone-password
-      valuesKey: password
-      targetPath: endpoints.identity.auth.cinder.password
