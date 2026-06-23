@@ -1,0 +1,36 @@
+conf:
+  auto_bridge_add:
+    br-ex: null
+  ovn_cms_options: "enable-chassis-as-gw,availability-zones=nova"
+  ovn_cms_options_gw_enabled: "enable-chassis-as-gw"
+
+labels:
+  ovn_controller_gw:
+    node_selector_key: openstack-control-plane
+    node_selector_value: enabled
+  ovn_northd:
+    node_selector_key: openstack-control-plane
+    node_selector_value: enabled
+  ovn_ovsdb_nb:
+    node_selector_key: openstack-control-plane
+    node_selector_value: enabled
+  ovn_ovsdb_sb:
+    node_selector_key: openstack-control-plane
+    node_selector_value: enabled
+
+pod:
+  replicas:
+    ovn_northd: 1
+    ovn_ovsdb_nb: 1
+    ovn_ovsdb_sb: 1
+  sidecars:
+    ovn_logging_parser: false
+    vector: false
+
+volume:
+  ovn_ovsdb_nb:
+    class_name: "local-path"
+    size: 20Gi
+  ovn_ovsdb_sb:
+    class_name: "local-path"
+    size: 20Gi

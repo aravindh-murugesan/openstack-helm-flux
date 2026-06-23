@@ -1,0 +1,19 @@
+images:
+  tags:
+    ovn_ovsdb_nb: quay.io/airshipit/ovn:ubuntu_noble
+    ovn_ovsdb_sb: quay.io/airshipit/ovn:ubuntu_noble
+    ovn_northd: quay.io/airshipit/ovn:ubuntu_noble
+    ovn_controller: quay.io/airshipit/ovn:ubuntu_noble
+
+pod:
+  replicas:
+    ovn_northd: 3
+    ovn_ovsdb_nb: 3
+    ovn_ovsdb_sb: 3
+  sidecars:
+    ovn_logging_parser: false
+    vector: false
+
+conf:
+  ovn_bridge_mappings: "phext:br-ex,phprod:br-mgmt"
+  ovn_cms_options: "enable-chassis-as-gw,availability-zones=nova"

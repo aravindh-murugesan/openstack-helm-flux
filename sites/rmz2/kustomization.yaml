@@ -22,3 +22,4 @@ resources:
   - ./flux/openstack-cinder.yaml
   - ./flux/openstack-libvirt.yaml
   - ./flux/openstack-openvswitch.yaml
+  - ./flux/openstack-ovn.yaml
