@@ -1,0 +1,18 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: infra-local-path-provisioner
+  namespace: flux-system
+  labels:
+    openstack-helm-flux/component-group: csi
+spec:
+  interval: 60m
+  timeout: 10m
+  sourceRef:
+    kind: GitRepository
+    name: openstack-helm-flux-repo
+    namespace: flux-system
+  path: ./sites/rmz2/infrastructure/local-path-provisioner
+  prune: true
+  wait: true
