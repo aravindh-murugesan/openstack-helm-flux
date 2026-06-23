@@ -1,0 +1,63 @@
+release_group: keystone
+
+network:
+  api:
+    ingress:
+      public: false
+
+pod:
+  replicas:
+    api: 3
+  lifecycle:
+    disruption_budget:
+      api:
+        min_available: 1
+  resources:
+    enabled: true
+    api:
+      requests:
+        memory: "128Mi"
+        cpu: "100m"
+      limits:
+        memory: "1024Mi"
+        cpu: "2000m"
+
+conf:
+  keystone:
+    DEFAULT:
+      use_db_reconnect: true
+    identity:
+      domain_specific_drivers_enabled: true
+      domain_configurations_from_database: true
+      password_hash_algorithm: bcrypt
+    cache:
+      enabled: true
+      backend: oslo_cache.memcache_pool
+    oslo_messaging_rabbit:
+      rabbit_ha_queues: false
+      rabbit_quorum_queues: true
+      rabbit_transient_quorum_queue: true
+      use_queue_manager: true
+
+dependencies:
+  static:
+    db_sync:
+      jobs:
+        - keystone-credential-setup
+        - keystone-fernet-setup
+
+manifests:
+  job_credential_cleanup: false
+  job_db_init: false
+  job_rabbit_init: false
+  pod_rally_test: false
+  secret_db: false
+  service_ingress_api: false
+  secret_credential_keys: true
+  secret_fernet_keys: true
+  secret_keystone: true
+  secret_ks_etc: true
+  configmap_etc: true
+  configmap_bin: true
+
+extraObjects: []

@@ -1,0 +1,144 @@
+images:
+  tags:
+    bootstrap: "quay.io/airshipit/openstack-client:2026.1-ubuntu_noble"
+    db_init: "quay.io/airshipit/openstack-client:2026.1-ubuntu_noble"
+    db_drop: "quay.io/airshipit/openstack-client:2026.1-ubuntu_noble"
+    keystone_api: "quay.io/airshipit/keystone:2026.1-ubuntu_noble"
+    keystone_bootstrap: "quay.io/airshipit/openstack-client:2026.1-ubuntu_noble"
+    keystone_credential_rotate: "quay.io/airshipit/keystone:2026.1-ubuntu_noble"
+    keystone_credential_setup: "quay.io/airshipit/keystone:2026.1-ubuntu_noble"
+    keystone_db_sync: "quay.io/airshipit/keystone:2026.1-ubuntu_noble"
+    keystone_domain_manage: "quay.io/airshipit/keystone:2026.1-ubuntu_noble"
+    keystone_fernet_rotate: "quay.io/airshipit/keystone:2026.1-ubuntu_noble"
+    keystone_fernet_setup: "quay.io/airshipit/keystone:2026.1-ubuntu_noble"
+    ks_user: "quay.io/airshipit/openstack-client:2026.1-ubuntu_noble"
+
+pod:
+  replicas:
+    api: 3
+
+extraObjects:
+  - apiVersion: gateway.networking.k8s.io/v1
+    kind: HTTPRoute
+    metadata:
+      name: keystone-route
+      namespace: "{{ .Release.Namespace }}"
+    spec:
+      parentRefs:
+        - name: tata-internal-gw
+          namespace: envoy-gateway-system
+      hostnames:
+        - "{{ .Values.endpoints.identity.host_fqdn_override.public.host }}"
+      rules:
+        - matches:
+            - path:
+                type: PathPrefix
+                value: /
+          backendRefs:
+            - name: keystone-api
+              port: 5000
+  - apiVersion: k8s.mariadb.com/v1alpha1
+    kind: Database
+    metadata:
+      name: keystone
+    spec:
+      mariaDbRef:
+        name: mariadb
+        waitForIt: true
+      characterSet: utf8
+      collate: utf8_general_ci
+      retryInterval: 5s
+  - apiVersion: k8s.mariadb.com/v1alpha1
+    kind: User
+    metadata:
+      name: keystone
+    spec:
+      mariaDbRef:
+        name: mariadb
+        waitForIt: true
+      passwordSecretKeyRef:
+        name: keystone-db-password
+        key: password
+      maxUserConnections: 0
+      host: "%"
+      retryInterval: 5s
+  - apiVersion: k8s.mariadb.com/v1alpha1
+    kind: Grant
+    metadata:
+      name: keystone-grant
+    spec:
+      mariaDbRef:
+        name: mariadb
+        waitForIt: true
+      privileges:
+        - "ALL"
+      database: "keystone"
+      table: "*"
+      username: keystone
+      grantOption: true
+      host: "%"
+      retryInterval: 5s
+
+  - apiVersion: rabbitmq.com/v1beta1
+    kind: User
+    metadata:
+      name: keystone
+    spec:
+      tags:
+        - management
+        - policymaker
+      rabbitmqClusterReference:
+        name: rabbitmq
+      importCredentialsSecret:
+        name: keystone-rabbitmq-password
+  - apiVersion: rabbitmq.com/v1beta1
+    kind: Vhost
+    metadata:
+      name: keystone-vhost
+    spec:
+      name: "keystone"
+      defaultQueueType: quorum
+      rabbitmqClusterReference:
+        name: rabbitmq
+  - apiVersion: rabbitmq.com/v1beta1
+    kind: Permission
+    metadata:
+      name: keystone-permission
+    spec:
+      vhost: "keystone"
+      userReference:
+        name: "keystone"
+      permissions:
+        write: ".*"
+        configure: ".*"
+        read: ".*"
+      rabbitmqClusterReference:
+        name: rabbitmq
+  - apiVersion: rabbitmq.com/v1beta1
+    kind: Policy
+    metadata:
+      name: keystone-notifications-ttl
+    spec:
+      name: keystone-notifications-ttl
+      vhost: "keystone"
+      pattern: "^notifications.*"
+      applyTo: "queues"
+      priority: 1
+      definition:
+        message-ttl: 86400000
+      rabbitmqClusterReference:
+        name: rabbitmq
+  - apiVersion: rabbitmq.com/v1beta1
+    kind: Policy
+    metadata:
+      name: keystone-quorum-three-replicas
+    spec:
+      name: keystone-quorum-three-replicas
+      vhost: "keystone"
+      pattern: ".*"
+      applyTo: queues
+      definition:
+        target-group-size: 3
+      priority: 0
+      rabbitmqClusterReference:
+        name: rabbitmq
