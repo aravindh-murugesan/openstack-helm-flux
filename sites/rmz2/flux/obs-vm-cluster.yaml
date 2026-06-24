@@ -19,4 +19,8 @@ spec:
   path: ./sites/rmz2/observability/vm-cluster
   prune: true
   wait: true
+  healthCheckExprs:
+    - apiVersion: operator.victoriametrics.com/v1beta1
+      kind: VMCluster
+      current: "has(status.updateStatus) && status.updateStatus == 'operational'"
   force: true
