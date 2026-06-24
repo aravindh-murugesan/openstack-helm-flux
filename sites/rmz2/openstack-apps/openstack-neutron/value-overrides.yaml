@@ -1,3 +1,7 @@
+network:
+  interface:
+    tunnel: "" ## VTEP Interface
+
 extraObjects:
   - apiVersion: gateway.networking.k8s.io/v1
     kind: HTTPRoute

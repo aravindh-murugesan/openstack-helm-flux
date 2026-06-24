@@ -1,0 +1,59 @@
+release_group: horizon
+
+network:
+  dashboard:
+    ingress:
+      public: false
+
+dependencies:
+  static:
+    db_sync:
+      jobs: []
+
+conf:
+  software:
+    apache2:
+      a2enmod:
+        - headers
+        - rewrite
+        - ssl
+  horizon:
+    local_settings:
+      config:
+        debug: "True"
+        secure_proxy_ssl_header: true
+        endpoint_type: "internalURL"
+
+pod:
+  replicas:
+    server: 3
+  resources:
+    enabled: true
+    server:
+      requests:
+        memory: "512Mi"
+        cpu: "1000m"
+      limits:
+        memory: "1024Mi"
+        cpu: "2000m"
+
+manifests:
+  certificates: false
+  configmap_bin: true
+  configmap_etc: true
+  configmap_logo: false
+  deployment: true
+  ingress_api: true
+  job_db_init: false
+  job_db_sync: true
+  job_db_drop: false
+  job_image_repo_sync: true
+  pdb: true
+  pod_helm_test: false
+  network_policy: false
+  secret_db: true
+  secret_ingress_tls: false
+  secret_keystone: true
+  secret_registry: true
+  service_ingress: false
+  service: true
