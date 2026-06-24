@@ -20,11 +20,6 @@ images:
     nova_spiceproxy_assets: "quay.io/airshipit/nova:2026.1-ubuntu_noble"
     nova_service_cleaner: "quay.io/airshipit/ceph-config-helper:latest-ubuntu_jammy"
 
-endpoints:
-  oslo_messaging:
-    hosts:
-      default: rabbitmq-nova
-
 manifests:
   job_rabbit_init: true
 
