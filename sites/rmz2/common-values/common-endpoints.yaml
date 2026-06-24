@@ -143,9 +143,10 @@ endpoints:
       default: mariadb-primary
   oslo_messaging:
     hosts:
-      default: rabbitmq-server
+      default: rabbitmq
     statefulset:
       replicas: 3
+      name: rabbitmq-server
   oslo_cache:
     hosts:
       default: memcached
