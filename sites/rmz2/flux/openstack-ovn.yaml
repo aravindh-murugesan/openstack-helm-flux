@@ -30,6 +30,8 @@ spec:
   targetNamespace: openstack
   releaseName: ovn
   timeout: 30m
+  dependsOn:
+    - name: openstack-openvswitch
   chart:
     spec:
       chart: ovn

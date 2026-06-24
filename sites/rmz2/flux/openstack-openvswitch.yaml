@@ -40,12 +40,12 @@ spec:
         namespace: flux-system
   install:
     timeout: 30m
-    disableWait: true
-    disableWaitForJobs: true
+    disableWait: false
+    disableWaitForJobs: false
   upgrade:
     timeout: 45m
-    disableWait: true
-    disableWaitForJobs: true
+    disableWait: false
+    disableWaitForJobs: false
     force: true
   valuesFrom:
     - kind: ConfigMap
