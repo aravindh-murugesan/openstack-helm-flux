@@ -17,7 +17,7 @@ conf:
     oslo_messaging_rabbit:
       amqp_durable_queues: false
       rabbit_ha_queues: false
-      rabbit_quorum_queue: true
+      rabbit_quorum_queues: true
       rabbit_transient_quorum_queue: false
       use_queue_manager: false
       rabbit_interval_max: 10
