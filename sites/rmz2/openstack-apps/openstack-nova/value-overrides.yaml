@@ -1,3 +1,8 @@
+endpoints:
+  oslo_messaging:
+    hosts:
+      default: rabbitmq-nova
+
 images:
   tags:
     bootstrap: "quay.io/airshipit/openstack-client:2026.1-ubuntu_noble"
@@ -201,7 +206,7 @@ extraObjects:
         - management
         - policymaker
       rabbitmqClusterReference:
-        name: rabbitmq
+        name: rabbitmq-nova
       importCredentialsSecret:
         name: nova-rabbitmq-password
   - apiVersion: rabbitmq.com/v1beta1
@@ -212,7 +217,7 @@ extraObjects:
       name: "nova"
       defaultQueueType: quorum
       rabbitmqClusterReference:
-        name: rabbitmq
+        name: rabbitmq-nova
   - apiVersion: rabbitmq.com/v1beta1
     kind: Permission
     metadata:
@@ -226,7 +231,7 @@ extraObjects:
         configure: ".*"
         read: ".*"
       rabbitmqClusterReference:
-        name: rabbitmq
+        name: rabbitmq-nova
   - apiVersion: rabbitmq.com/v1beta1
     kind: Policy
     metadata:
@@ -240,7 +245,7 @@ extraObjects:
       definition:
         message-ttl: 86400000
       rabbitmqClusterReference:
-        name: rabbitmq
+        name: rabbitmq-nova
   - apiVersion: rabbitmq.com/v1beta1
     kind: Policy
     metadata:
@@ -254,7 +259,7 @@ extraObjects:
         target-group-size: 3
       priority: 0
       rabbitmqClusterReference:
-        name: rabbitmq
+        name: rabbitmq-nova
   - apiVersion: autoscaling/v2
     kind: HorizontalPodAutoscaler
     metadata:
