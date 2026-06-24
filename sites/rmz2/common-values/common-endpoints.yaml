@@ -121,4 +121,4 @@ endpoints:
       default: null
     statefulset:
       replicas: 3
-      name: memcached
+      name: memcached-memcached
