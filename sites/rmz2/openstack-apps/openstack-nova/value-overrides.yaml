@@ -20,6 +20,14 @@ images:
     nova_spiceproxy_assets: "quay.io/airshipit/nova:2026.1-ubuntu_noble"
     nova_service_cleaner: "quay.io/airshipit/ceph-config-helper:latest-ubuntu_jammy"
 
+endpoints:
+  oslo_messaging:
+    hosts:
+      default: rabbitmq-nova
+
+manifests:
+  job_rabbit_init: true
+
 pod:
   security_context:
     compute:
@@ -192,118 +200,3 @@ extraObjects:
       grantOption: true
       host: "%"
       retryInterval: 5s
-  - apiVersion: rabbitmq.com/v1beta1
-    kind: User
-    metadata:
-      name: nova
-    spec:
-      tags:
-        - management
-        - policymaker
-      rabbitmqClusterReference:
-        name: rabbitmq
-      importCredentialsSecret:
-        name: nova-rabbitmq-password
-  - apiVersion: rabbitmq.com/v1beta1
-    kind: Vhost
-    metadata:
-      name: nova-vhost
-    spec:
-      name: "nova"
-      defaultQueueType: quorum
-      rabbitmqClusterReference:
-        name: rabbitmq
-  - apiVersion: rabbitmq.com/v1beta1
-    kind: Permission
-    metadata:
-      name: nova-permission
-    spec:
-      vhost: "nova"
-      userReference:
-        name: "nova"
-      permissions:
-        write: ".*"
-        configure: ".*"
-        read: ".*"
-      rabbitmqClusterReference:
-        name: rabbitmq
-  - apiVersion: rabbitmq.com/v1beta1
-    kind: Policy
-    metadata:
-      name: nova-notifications-ttl
-    spec:
-      name: nova-notifications-ttl
-      vhost: "nova"
-      pattern: "^notifications.*"
-      applyTo: "queues"
-      priority: 1
-      definition:
-        message-ttl: 86400000
-      rabbitmqClusterReference:
-        name: rabbitmq
-  - apiVersion: rabbitmq.com/v1beta1
-    kind: Policy
-    metadata:
-      name: nova-quorum-three-replicas
-    spec:
-      name: nova-quorum-three-replicas
-      vhost: "nova"
-      pattern: ".*"
-      applyTo: queues
-      definition:
-        target-group-size: 3
-      priority: 0
-      rabbitmqClusterReference:
-        name: rabbitmq
-  - apiVersion: rabbitmq.com/v1beta1
-    kind: Queue
-    metadata:
-      name: nova-queue
-      namespace: openstack
-      labels:
-        app.kubernetes.io/managed-by: "Helm"
-      annotations:
-        helm.sh/resource-policy: keep
-        meta.helm.sh/release-name: "nova"
-        meta.helm.sh/release-namespace: "openstack"
-    spec:
-      name: nova-qq
-      vhost: "nova"
-      type: quorum
-      autoDelete: false
-      durable: true
-      rabbitmqClusterReference:
-        name: rabbitmq
-        namespace: openstack
-  - apiVersion: autoscaling/v2
-    kind: HorizontalPodAutoscaler
-    metadata:
-      name: nova-api
-      namespace: "{{ .Release.Namespace }}"
-    spec:
-      scaleTargetRef:
-        apiVersion: apps/v1
-        kind: Deployment
-        name: nova-api
-      minReplicas: 3
-      maxReplicas: 10
-      metrics:
-        - type: Resource
-          resource:
-            name: cpu
-            target:
-              type: Utilization
-              averageUtilization: 75
-      behavior:
-        scaleUp:
-          stabilizationWindowSeconds: 30
-          policies:
-            - type: Pods
-              value: 1
-              periodSeconds: 30
-        scaleDown:
-          stabilizationWindowSeconds: 300
-          policies:
-            - type: Percent
-              value: 100
-              periodSeconds: 15
