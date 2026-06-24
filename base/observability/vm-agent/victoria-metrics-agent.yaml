@@ -1,0 +1,32 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMAgent
+metadata:
+  name: vmagent
+  namespace: observability
+spec:
+  replicaCount: 2
+  version: "v1.139.0-cluster"
+  scrapeInterval: "30s"
+  remoteWrite:
+    - url: "http://vminsert-vmcluster.observability.svc.cluster.local:8480/insert/0/prometheus/api/v1/write"
+
+  # Scrape all namespaces by default
+  selectAllByDefault: true
+  serviceScrapeSelector: {}
+  podScrapeSelector: {}
+  nodeScrapeSelector: {}
+  staticScrapeSelector: {}
+
+  nodeSelector:
+    openstack-control-plane: enabled
+
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "256Mi"
+    limits:
+      cpu: "500m"
+      memory: "1Gi"
+
+  externalLabels:
+    cluster: "base-cluster"
