@@ -51,7 +51,7 @@ spec:
   chart:
     spec:
       chart: nova
-      version: 2026.1.8+a2a343968
+      version: 2025.2.22+008600f9e
       sourceRef:
         kind: HelmRepository
         name: openstack-helm-repo
@@ -92,10 +92,10 @@ spec:
       valuesKey: password
       targetPath: endpoints.oslo_messaging.auth.nova.password
     - kind: Secret
-      name: rabbitmq-nova-default-user
+      name: rabbitmq-default-user
       valuesKey: password
       targetPath: endpoints.oslo_messaging.auth.admin.password
     - kind: Secret
-      name: rabbitmq-nova-default-user
+      name: rabbitmq-default-user
       valuesKey: username
       targetPath: endpoints.oslo_messaging.auth.admin.username
