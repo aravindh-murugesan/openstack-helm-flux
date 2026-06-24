@@ -4,7 +4,7 @@ metadata:
   name: vmagent
   namespace: observability
 spec:
-  replicaCount: 2
+  replicaCount: 1
   scrapeInterval: "30s"
   remoteWrite:
     - url: "http://vminsert-vmcluster.observability.svc.cluster.local:8480/insert/0/prometheus/api/v1/write"
