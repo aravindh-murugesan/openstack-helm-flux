@@ -6,6 +6,7 @@ resources:
   - ./namespaces.yaml
   - ./flux/sources.yaml
   - ./flux/infra-local-path-provisioner.yaml
+  - ./flux/infra-vm-operator.yaml
   - ./flux/infra-cnpg-operator.yaml
   - ./flux/infra-rabbitmq-cluster-operator.yaml
   - ./flux/infra-rabbitmq-topology-operator.yaml
