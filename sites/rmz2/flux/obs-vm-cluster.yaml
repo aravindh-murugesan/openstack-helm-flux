@@ -9,6 +9,7 @@ metadata:
 spec:
   interval: 60m
   timeout: 10m
+  targetNamespace: observability
   dependsOn:
     - name: infra-vm-operator
   sourceRef:
