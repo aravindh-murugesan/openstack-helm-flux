@@ -1,0 +1,95 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: openstack-nova-values
+  namespace: openstack
+  labels:
+    openstack-helm-flux/component-group: openstack
+spec:
+  interval: 30m
+  targetNamespace: openstack
+  dependsOn:
+    - name: openstack-common-values
+      namespace: openstack
+    - name: openstack-mariadb
+      namespace: openstack
+    - name: openstack-rabbitmq
+      namespace: openstack
+  sourceRef:
+    kind: GitRepository
+    name: openstack-helm-flux-repo
+    namespace: flux-system
+  path: ./sites/rmz2/openstack-apps/openstack-nova
+  prune: true
+  wait: true
+
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: openstack-nova
+  namespace: openstack
+  labels:
+    openstack-helm-flux/component-group: openstack
+spec:
+  interval: 10m
+  targetNamespace: openstack
+  releaseName: nova
+  timeout: 30m
+  dependsOn:
+    - name: infra-envoy-gateway
+      namespace: flux-system
+    - name: openstack-memcached
+      namespace: openstack
+    - name: openstack-keystone
+      namespace: openstack
+    - name: openstack-ovn
+      namespace: openstack
+    - name: openstack-placement
+      namespace: openstack
+    - name: openstack-neutron
+      namespace: openstack
+  chart:
+    spec:
+      chart: nova
+      version: 2026.1.5+a2a343968
+      sourceRef:
+        kind: HelmRepository
+        name: openstack-helm-repo
+        namespace: flux-system
+  install:
+    timeout: 30m
+    disableWait: true
+    disableWaitForJobs: true
+  upgrade:
+    timeout: 45m
+    disableWait: true
+    disableWaitForJobs: true
+    force: true
+  valuesFrom:
+    - kind: ConfigMap
+      name: openstack-common-endpoints
+      valuesKey: values.yaml
+    - kind: ConfigMap
+      name: openstack-helm-flux-nova-values
+      valuesKey: values.yaml
+    - kind: ConfigMap
+      name: openstack-helm-flux-nova-values-override
+      valuesKey: values.yaml
+    - kind: Secret
+      name: nova-db-password
+      valuesKey: password
+      targetPath: endpoints.oslo_db.auth.nova.password
+    - kind: Secret
+      name: nova-db-password
+      valuesKey: password
+      targetPath: endpoints.oslo_db_api.auth.nova.password
+    - kind: Secret
+      name: nova-db-password
+      valuesKey: password
+      targetPath: endpoints.oslo_db_cell0.auth.nova.password
+    - kind: Secret
+      name: nova-rabbitmq-password
+      valuesKey: password
+      targetPath: endpoints.oslo_messaging.auth.nova.password
