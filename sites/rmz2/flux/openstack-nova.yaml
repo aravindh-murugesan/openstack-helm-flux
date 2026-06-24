@@ -48,12 +48,10 @@ spec:
       namespace: openstack
     - name: openstack-placement
       namespace: openstack
-    - name: openstack-neutron
-      namespace: openstack
   chart:
     spec:
       chart: nova
-      version: 2026.1.5+a2a343968
+      version: 2026.1.8+a2a343968
       sourceRef:
         kind: HelmRepository
         name: openstack-helm-repo
