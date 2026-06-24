@@ -1,0 +1,21 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: obs-vm-cluster
+  namespace: flux-system
+  labels:
+    openstack-helm-flux/component-group: observability
+spec:
+  interval: 60m
+  timeout: 10m
+  dependsOn:
+    - name: infra-vm-operator
+  sourceRef:
+    kind: GitRepository
+    name: openstack-helm-flux-repo
+    namespace: flux-system
+  path: ./sites/rmz2/observability/vm-cluster
+  prune: true
+  wait: true
+  force: true

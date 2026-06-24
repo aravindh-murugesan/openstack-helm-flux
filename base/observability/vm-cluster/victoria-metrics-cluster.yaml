@@ -1,0 +1,73 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMCluster
+metadata:
+  name: vmcluster
+  namespace: observability
+spec:
+  retentionPeriod: "14d"
+  clusterVersion: "v1.139.0-cluster"
+  replicationFactor: 2
+
+  # Storage nodes
+  vmstorage:
+    image:
+      pullPolicy: IfNotPresent
+    replicaCount: 3
+    resources:
+      requests:
+        cpu: "1000m"
+        memory: "512Mi"
+      limits:
+        cpu: "2000m"
+        memory: "2Gi"
+    nodeSelector:
+      openstack-control-plane: enabled
+    storage:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: "local-path"
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: "20Gi"
+
+  # Ingestion nodes
+  vminsert:
+    image:
+      pullPolicy: IfNotPresent
+    replicaCount: 2
+    nodeSelector:
+      openstack-control-plane: enabled
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "256Mi"
+      limits:
+        cpu: "500m"
+        memory: "512Mi"
+
+  # Querying nodes
+  vmselect:
+    image:
+      pullPolicy: IfNotPresent
+    replicaCount: 2
+    nodeSelector:
+      openstack-control-plane: enabled
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "256Mi"
+      limits:
+        cpu: "1000m"
+        memory: "512Mi"
+    cacheMountPath: "/cache"
+    storage:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: "local-path"
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: "2Gi"
