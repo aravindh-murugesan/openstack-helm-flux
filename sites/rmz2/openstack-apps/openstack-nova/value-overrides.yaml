@@ -255,6 +255,26 @@ extraObjects:
       priority: 0
       rabbitmqClusterReference:
         name: rabbitmq
+  - apiVersion: rabbitmq.com/v1beta1
+    kind: Queue
+    metadata:
+      name: nova-queue
+      namespace: openstack
+      labels:
+        app.kubernetes.io/managed-by: "Helm"
+      annotations:
+        helm.sh/resource-policy: keep
+        meta.helm.sh/release-name: "nova"
+        meta.helm.sh/release-namespace: "openstack"
+    spec:
+      name: nova-qq
+      vhost: "nova"
+      type: quorum
+      autoDelete: false
+      durable: true
+      rabbitmqClusterReference:
+        name: rabbitmq
+        namespace: openstack
   - apiVersion: autoscaling/v2
     kind: HorizontalPodAutoscaler
     metadata:
