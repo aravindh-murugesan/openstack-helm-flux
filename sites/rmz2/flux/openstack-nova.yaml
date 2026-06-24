@@ -51,7 +51,7 @@ spec:
   chart:
     spec:
       chart: nova
-      version: 2025.2.22+008600f9e
+      version: 2026.1.8+a2a343968
       sourceRef:
         kind: HelmRepository
         name: openstack-helm-repo
