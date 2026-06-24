@@ -7,7 +7,7 @@ endpoints:
         public: 443
     host_fqdn_override:
       public:
-        host: "cinder.in-rmz2.com"
+        host: "cinder.rmz2.com"
   volumev2:
     scheme:
       public: https
@@ -16,7 +16,7 @@ endpoints:
         public: 443
     host_fqdn_override:
       public:
-        host: "cinder.in-rmz2.com"
+        host: "cinder.rmz2.com"
   volumev3:
     scheme:
       public: https
@@ -25,7 +25,7 @@ endpoints:
         public: 443
     host_fqdn_override:
       public:
-        host: "cinder.in-rmz2.com"
+        host: "cinder.rmz2.com"
   image:
     scheme:
       public: https
