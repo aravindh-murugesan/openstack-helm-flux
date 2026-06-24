@@ -36,6 +36,9 @@ conf:
     uwsgi:
       processes: 2
       threads: 1
+  logging:
+    logger_nova:
+      level: DEBUG
   rabbitmq:
     policies: []
 
