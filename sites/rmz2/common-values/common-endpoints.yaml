@@ -61,7 +61,7 @@ endpoints:
         public: 443
     host_fqdn_override:
       public:
-        host: "nova.in-rmz2.com"
+        host: "nova.rmz2.com"
   compute_novnc_proxy:
     scheme:
       public: https
@@ -70,13 +70,13 @@ endpoints:
         public: 443
     host_fqdn_override:
       public:
-        host: "console.in-rmz2.com"
+        host: "console.rmz2.com"
   compute_metadata:
     scheme:
       public: https
     host_fqdn_override:
       public:
-        host: "nova-metadata.in-rmz2.com"
+        host: "nova-metadata.rmz2.com"
   identity:
     auth:
       admin:
@@ -119,10 +119,10 @@ endpoints:
         user_domain_name: service
         project_domain_name: service
       nova:
-        password: "6J5RIX5TgS55kU7qskUmVMWlzK4e2Cry"
         region_name: RMZ
         role: admin,service
         username: nova
+        password: "6J5RIX5TgS55kU7qskUmVMWlzK4e2Cry"
         project_name: service
         user_domain_name: service
         project_domain_name: service
@@ -138,14 +138,6 @@ endpoints:
         internal: 5000
         service: 5000
         admin: 5000
-  oslo_db_api:
-    auth:
-      nova:
-        password: "Un04zNVw16tilCeq0JSPScwO2drSnLpu"
-  oslo_db_cell0:
-    auth:
-      nova:
-        password: "Un04zNVw16tilCeq0JSPScwO2drSnLpu"
   oslo_db:
     hosts:
       default: mariadb-primary
