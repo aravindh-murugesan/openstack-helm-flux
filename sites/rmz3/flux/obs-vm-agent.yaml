@@ -17,7 +17,7 @@ spec:
     kind: GitRepository
     name: openstack-helm-flux-repo
     namespace: flux-system
-  path: ./sites/rmz2/observability/vm-agent
+  path: ./sites/rmz3/observability/vm-agent
   prune: true
   wait: true
   healthCheckExprs:

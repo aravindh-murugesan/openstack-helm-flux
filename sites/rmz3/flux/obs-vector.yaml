@@ -13,7 +13,7 @@ spec:
     kind: GitRepository
     name: openstack-helm-flux-repo
     namespace: flux-system
-  path: ./sites/rmz2/observability/vector
+  path: ./sites/rmz3/observability/vector
   prune: true
   wait: true
 

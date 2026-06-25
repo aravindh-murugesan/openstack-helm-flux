@@ -17,7 +17,7 @@ spec:
     kind: GitRepository
     name: openstack-helm-flux-repo
     namespace: flux-system
-  path: ./sites/rmz2/openstack-apps/mariadb-cluster
+  path: ./sites/rmz3/openstack-apps/mariadb-cluster
   prune: true
   wait: true
   force: true

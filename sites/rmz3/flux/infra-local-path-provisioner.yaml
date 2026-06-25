@@ -14,6 +14,6 @@ spec:
     kind: GitRepository
     name: openstack-helm-flux-repo
     namespace: flux-system
-  path: ./sites/rmz2/infrastructure/local-path-provisioner
+  path: ./sites/rmz3/infrastructure/local-path-provisioner
   prune: true
   wait: true

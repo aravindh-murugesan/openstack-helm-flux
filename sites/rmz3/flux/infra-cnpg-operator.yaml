@@ -14,7 +14,7 @@ spec:
     kind: GitRepository
     name: openstack-helm-flux-repo
     namespace: flux-system
-  path: ./sites/rmz2/infrastructure/cnpg-operator
+  path: ./sites/rmz3/infrastructure/cnpg-operator
   prune: true
   wait: true
   force: true

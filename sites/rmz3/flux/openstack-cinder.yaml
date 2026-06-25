@@ -20,7 +20,7 @@ spec:
     kind: GitRepository
     name: openstack-helm-flux-repo
     namespace: flux-system
-  path: ./sites/rmz2/openstack-apps/openstack-cinder
+  path: ./sites/rmz3/openstack-apps/openstack-cinder
   prune: true
   wait: true
 

@@ -19,7 +19,7 @@ spec:
     kind: GitRepository
     name: openstack-helm-flux-repo
     namespace: flux-system
-  path: ./sites/rmz2/openstack-apps/rabbitmq-nova-cluster
+  path: ./sites/rmz3/openstack-apps/rabbitmq-nova-cluster
   prune: true
   wait: true
   force: true

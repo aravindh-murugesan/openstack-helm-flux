@@ -85,7 +85,7 @@ extraObjects:
         - name: tata-internal-gw
           namespace: envoy-gateway-system
       hostnames:
-        - "ui.rmz2.com"
+        - "ui.rmz3.com"
       rules:
         - matches:
             - path:

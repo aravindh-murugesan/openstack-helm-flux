@@ -13,7 +13,7 @@ spec:
     kind: GitRepository
     name: openstack-helm-flux-repo
     namespace: flux-system
-  path: ./sites/rmz2/infrastructure/vm-operator
+  path: ./sites/rmz3/infrastructure/vm-operator
   prune: true
   wait: true
   force: true

@@ -16,7 +16,7 @@ spec:
     kind: GitRepository
     name: openstack-helm-flux-repo
     namespace: flux-system
-  path: ./sites/rmz2/openstack-apps/openstack-libvirt
+  path: ./sites/rmz3/openstack-apps/openstack-libvirt
   prune: true
   wait: true
 

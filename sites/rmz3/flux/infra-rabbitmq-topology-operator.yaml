@@ -15,6 +15,6 @@ spec:
     kind: GitRepository
     name: openstack-helm-flux-repo
     namespace: flux-system
-  path: ./sites/rmz2/infrastructure/rabbitmq-topology-operator
+  path: ./sites/rmz3/infrastructure/rabbitmq-topology-operator
   prune: true
   wait: true

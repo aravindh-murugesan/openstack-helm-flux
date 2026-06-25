@@ -13,7 +13,7 @@ spec:
     kind: GitRepository
     name: openstack-helm-flux-repo
     namespace: flux-system
-  path: ./sites/rmz2/openstack-apps/openstack-openvswitch
+  path: ./sites/rmz3/openstack-apps/openstack-openvswitch
   prune: true
   wait: true
 

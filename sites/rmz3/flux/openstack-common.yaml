@@ -13,6 +13,6 @@ spec:
     kind: GitRepository
     name: openstack-helm-flux-repo
     namespace: flux-system
-  path: ./sites/rmz2/common-values
+  path: ./sites/rmz3/common-values
   prune: true
   wait: true

@@ -12,4 +12,4 @@ patches:
     patch: |-
       - op: replace
         path: /spec/externalLabels/cluster
-        value: rmz2
+        value: rmz3

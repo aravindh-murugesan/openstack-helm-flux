@@ -13,7 +13,7 @@ spec:
     kind: GitRepository
     name: openstack-helm-flux-repo
     namespace: flux-system
-  path: ./sites/rmz2/observability/node-problem-detector
+  path: ./sites/rmz3/observability/node-problem-detector
   prune: true
   wait: true
 
