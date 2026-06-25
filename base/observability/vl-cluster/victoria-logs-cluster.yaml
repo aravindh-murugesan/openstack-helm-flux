@@ -4,12 +4,11 @@ metadata:
   name: vmlogs
   namespace: observability
 spec:
-  retentionPeriod: "3d"
-
   vlstorage:
     image:
       pullPolicy: IfNotPresent
     replicaCount: 3
+    retentionPeriod: "3d"
     nodeSelector:
       openstack-control-plane: enabled
     resources:
