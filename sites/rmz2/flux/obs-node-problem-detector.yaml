@@ -32,7 +32,7 @@ spec:
   timeout: 30m
   chart:
     spec:
-      chart: node-problem-detector
+      chart: kubernetes-node-problem-detector
       version: "2026.1.0+a2a343968"
       sourceRef:
         kind: HelmRepository
