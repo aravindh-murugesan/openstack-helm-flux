@@ -1,0 +1,56 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: obs-node-problem-detector-values
+  namespace: observability
+  labels:
+    openstack-helm-flux/component-group: observability
+spec:
+  interval: 30m
+  targetNamespace: observability
+  sourceRef:
+    kind: GitRepository
+    name: openstack-helm-flux-repo
+    namespace: flux-system
+  path: ./sites/rmz2/observability/node-problem-detector
+  prune: true
+  wait: true
+
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: node-problem-detector
+  namespace: observability
+  labels:
+    openstack-helm-flux/component-group: observability
+spec:
+  interval: 10m
+  targetNamespace: observability
+  releaseName: node-problem-detector
+  timeout: 30m
+  chart:
+    spec:
+      chart: kubernetes-node-problem-detector
+      version: "2026.1.0+a2a343968"
+      sourceRef:
+        kind: HelmRepository
+        name: openstack-helm-repo
+        namespace: flux-system
+  install:
+    timeout: 30m
+    disableWait: false
+    disableWaitForJobs: false
+  upgrade:
+    timeout: 45m
+    disableWait: false
+    disableWaitForJobs: false
+    force: true
+  valuesFrom:
+    - kind: ConfigMap
+      name: openstack-helm-flux-node-problem-detector-values
+      valuesKey: values.yaml
+    - kind: ConfigMap
+      name: openstack-helm-flux-node-problem-detector-values-override
+      valuesKey: values.yaml

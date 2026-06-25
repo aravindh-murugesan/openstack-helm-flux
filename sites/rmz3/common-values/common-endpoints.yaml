@@ -1,0 +1,166 @@
+endpoints:
+  dashboard:
+    scheme:
+      public: https
+    port:
+      api:
+        public: 443
+    host_fqdn_override:
+      public:
+        host: "ui.rmz3.com"
+  volume:
+    scheme:
+      public: https
+    port:
+      api:
+        public: 443
+    host_fqdn_override:
+      public:
+        host: "cinder.rmz3.com"
+  volumev2:
+    scheme:
+      public: https
+    port:
+      api:
+        public: 443
+    host_fqdn_override:
+      public:
+        host: "cinder.rmz3.com"
+  volumev3:
+    scheme:
+      public: https
+    port:
+      api:
+        public: 443
+    host_fqdn_override:
+      public:
+        host: "cinder.rmz3.com"
+  image:
+    scheme:
+      public: https
+    port:
+      api:
+        public: 443
+    host_fqdn_override:
+      public:
+        host: "glance.rmz3.com"
+  placement:
+    scheme:
+      public: https
+    port:
+      api:
+        public: 443
+    host_fqdn_override:
+      public:
+        host: "placement.rmz3.com"
+  network:
+    scheme:
+      public: https
+    port:
+      api:
+        public: 443
+    host_fqdn_override:
+      public:
+        host: "neutron.rmz3.com"
+  compute:
+    scheme:
+      public: https
+    port:
+      api:
+        public: 443
+    host_fqdn_override:
+      public:
+        host: "nova.rmz3.com"
+  compute_novnc_proxy:
+    scheme:
+      public: https
+    port:
+      novnc_proxy:
+        public: 443
+    host_fqdn_override:
+      public:
+        host: "console.rmz3.com"
+  compute_metadata:
+    scheme:
+      public: https
+    host_fqdn_override:
+      public:
+        host: "nova-metadata.rmz3.com"
+  identity:
+    auth:
+      admin:
+        region_name: RMZ
+        username: admin
+        password: "vpLVDqd5BtCbTN9QWeSkU738McZszrAE"
+        project_name: admin
+        user_domain_name: default
+        project_domain_name: default
+      glance:
+        role: admin,service
+        region_name: RMZ
+        project_name: service
+        username: glance
+        password: "FnDep4LGgWKEhJ5BYQPcRszwC7HZS6rU"
+        user_domain_name: service
+        project_domain_name: service
+      cinder:
+        role: admin,service
+        region_name: RMZ
+        project_name: service
+        username: cinder
+        password: "VLj6bTeENUBg2x974aAdWvJkzKX5t3rm"
+        user_domain_name: service
+        project_domain_name: service
+      placement:
+        role: admin,service
+        region_name: RMZ
+        project_name: service
+        username: placement
+        password: "MS9KzEgn8cqaDQd7xhwBN25WCpPX6fAU"
+        user_domain_name: service
+        project_domain_name: service
+      neutron:
+        region_name: RMZ
+        role: admin,service
+        username: neutron
+        password: "wzJEVBG7cbL5pH8K2hDAvYfSM4UFetRx"
+        project_name: service
+        user_domain_name: service
+        project_domain_name: service
+      nova:
+        region_name: RMZ
+        role: admin,service
+        username: nova
+        password: "XkYpcVTbzQU2MaLHJeD9S5RwsfAmFBr6"
+        project_name: service
+        user_domain_name: service
+        project_domain_name: service
+    host_fqdn_override:
+      public:
+        host: "keystone.rmz3.com"
+    scheme:
+      public: https
+    port:
+      api:
+        default: 80
+        public: 443
+        internal: 5000
+        service: 5000
+        admin: 5000
+  oslo_db:
+    hosts:
+      default: mariadb-primary
+  oslo_messaging:
+    hosts:
+      default: rabbitmq-nodes
+    statefulset:
+      replicas: 3
+      name: rabbitmq-server
+  oslo_cache:
+    hosts:
+      default: memcached
+    host_fqdn_override:
+      default: null
+    statefulset:
+      replicas: 3
+      name: memcached-memcached

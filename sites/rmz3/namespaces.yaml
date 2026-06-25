@@ -1,0 +1,17 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: openstack
+  labels:
+    vector_log_scrape: "enabled"
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: rabbitmq-system
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: observability

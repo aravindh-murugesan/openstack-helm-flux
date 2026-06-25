@@ -1,0 +1,54 @@
+## All the sources - GitRepository, HelmRepository are expected to be in flux-system namespace.
+
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: openstack-helm-flux-repo
+  namespace: flux-system
+spec:
+  interval: 5m
+  url: https://github.com/aravindh-murugesan/openstack-helm-flux
+  ref:
+    branch: main
+
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: openstack-helm-repo
+  namespace: flux-system
+spec:
+  interval: 60m
+  url: https://tarballs.opendev.org/openstack/openstack-helm
+
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: mariadb-operator
+  namespace: flux-system
+spec:
+  interval: 60m
+  url: oci://ghcr.io/mariadb-operator/charts
+  type: oci
+
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: envoy-gateway
+  namespace: flux-system
+spec:
+  interval: 60m
+  url: oci://docker.io/envoyproxy
+  type: oci
+
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: vector
+  namespace: flux-system
+spec:
+  interval: 60m
+  url: https://helm.vector.dev

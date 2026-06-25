@@ -1,0 +1,59 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: openstack-libvirt-values
+  namespace: openstack
+  labels:
+    openstack-helm-flux/component-group: openstack
+spec:
+  interval: 30m
+  targetNamespace: openstack
+  dependsOn:
+    - name: openstack-common-values
+      namespace: openstack
+  sourceRef:
+    kind: GitRepository
+    name: openstack-helm-flux-repo
+    namespace: flux-system
+  path: ./sites/rmz2/openstack-apps/openstack-libvirt
+  prune: true
+  wait: true
+
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: openstack-libvirt
+  namespace: openstack
+  labels:
+    openstack-helm-flux/component-group: openstack
+spec:
+  interval: 10m
+  targetNamespace: openstack
+  releaseName: libvirt
+  timeout: 30m
+  chart:
+    spec:
+      chart: libvirt
+      version: 2026.1.4+a2a343968
+      sourceRef:
+        kind: HelmRepository
+        name: openstack-helm-repo
+        namespace: flux-system
+  install:
+    timeout: 30m
+    disableWait: true
+    disableWaitForJobs: true
+  upgrade:
+    timeout: 45m
+    disableWait: true
+    disableWaitForJobs: true
+    force: true
+  valuesFrom:
+    - kind: ConfigMap
+      name: openstack-helm-flux-libvirt-values
+      valuesKey: values.yaml
+    - kind: ConfigMap
+      name: openstack-helm-flux-libvirt-values-override
+      valuesKey: values.yaml

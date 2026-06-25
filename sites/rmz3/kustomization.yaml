@@ -1,0 +1,35 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ./namespaces.yaml
+  - ./flux/sources.yaml
+  - ./flux/infra-local-path-provisioner.yaml
+  - ./flux/infra-vm-operator.yaml
+  - ./flux/obs-vm-cluster.yaml
+  - ./flux/obs-vl-cluster.yaml
+  - ./flux/obs-vm-agent.yaml
+  - ./flux/obs-vector.yaml
+  - ./flux/obs-node-problem-detector.yaml
+  - ./flux/infra-cnpg-operator.yaml
+  - ./flux/infra-rabbitmq-cluster-operator.yaml
+  - ./flux/infra-rabbitmq-topology-operator.yaml
+  - ./flux/infra-mariadb-crds.yaml
+  - ./flux/infra-mariadb-operator.yaml
+  - ./flux/infra-envoy-gateway.yaml
+  - ./flux/openstack-memcached.yaml
+  - ./flux/openstack-rabbitmq.yaml
+  - ./flux/openstack-nova-rabbitmq.yaml
+  - ./flux/openstack-mariadb.yaml
+  - ./flux/openstack-common.yaml
+  - ./flux/openstack-keystone.yaml
+  - ./flux/openstack-glance.yaml
+  - ./flux/openstack-cinder.yaml
+  - ./flux/openstack-libvirt.yaml
+  - ./flux/openstack-openvswitch.yaml
+  - ./flux/openstack-ovn.yaml
+  - ./flux/openstack-placement.yaml
+  - ./flux/openstack-neutron.yaml
+  - ./flux/openstack-nova.yaml
+  - ./flux/openstack-horizon.yaml

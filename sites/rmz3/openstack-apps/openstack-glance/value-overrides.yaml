@@ -1,0 +1,152 @@
+images:
+  tags:
+    bootstrap: "quay.io/airshipit/openstack-client:2026.1-ubuntu_noble"
+    db_init: "quay.io/airshipit/openstack-client:2026.1-ubuntu_noble"
+    db_drop: "quay.io/airshipit/openstack-client:2026.1-ubuntu_noble"
+    ks_user: "quay.io/airshipit/openstack-client:2026.1-ubuntu_noble"
+    ks_service: "quay.io/airshipit/openstack-client:2026.1-ubuntu_noble"
+    ks_endpoints: "quay.io/airshipit/openstack-client:2026.1-ubuntu_noble"
+    glance_db_sync: "quay.io/airshipit/glance:2026.1-ubuntu_noble"
+    glance_api: "quay.io/airshipit/glance:2026.1-ubuntu_noble"
+    glance_metadefs_load: "quay.io/airshipit/glance:2026.1-ubuntu_noble"
+    glance_storage_init: "quay.io/airshipit/ceph-config-helper:latest-ubuntu_jammy"
+
+storage: pvc
+keep_pvc: true
+
+conf:
+  glance:
+    oslo_messaging_rabbit:
+      rabbit_ha_queues: false
+      rabbit_quorum_queues: true
+      rabbit_transient_quorum_queue: true
+      use_queue_manager: true
+
+extraObjects:
+  - apiVersion: gateway.networking.k8s.io/v1
+    kind: HTTPRoute
+    metadata:
+      name: glance-route
+      namespace: "{{ .Release.Namespace }}"
+    spec:
+      hostnames:
+        - "{{ .Values.endpoints.image.host_fqdn_override.public.host }}"
+      parentRefs:
+        - name: tata-internal-gw
+          namespace: envoy-gateway-system
+      rules:
+        - matches:
+            - path:
+                type: PathPrefix
+                value: /
+          timeouts:
+            request: 3600s
+            backendRequest: 3600s
+          backendRefs:
+            - name: glance-api
+              port: 9292
+  - apiVersion: k8s.mariadb.com/v1alpha1
+    kind: Database
+    metadata:
+      name: glance
+    spec:
+      mariaDbRef:
+        name: mariadb
+        waitForIt: true
+      characterSet: utf8
+      collate: utf8_general_ci
+      retryInterval: 5s
+  - apiVersion: k8s.mariadb.com/v1alpha1
+    kind: User
+    metadata:
+      name: glance
+    spec:
+      mariaDbRef:
+        name: mariadb
+        waitForIt: true
+      passwordSecretKeyRef:
+        name: glance-db-password
+        key: password
+      maxUserConnections: 0
+      host: "%"
+      retryInterval: 5s
+  - apiVersion: k8s.mariadb.com/v1alpha1
+    kind: Grant
+    metadata:
+      name: glance-grant
+    spec:
+      mariaDbRef:
+        name: mariadb
+        waitForIt: true
+      privileges:
+        - "ALL"
+      database: "glance"
+      table: "*"
+      username: glance
+      grantOption: true
+      host: "%"
+      retryInterval: 5s
+
+  - apiVersion: rabbitmq.com/v1beta1
+    kind: User
+    metadata:
+      name: glance
+    spec:
+      tags:
+        - management
+        - policymaker
+      rabbitmqClusterReference:
+        name: rabbitmq
+      importCredentialsSecret:
+        name: glance-rabbitmq-password
+  - apiVersion: rabbitmq.com/v1beta1
+    kind: Vhost
+    metadata:
+      name: glance-vhost
+    spec:
+      name: "glance"
+      defaultQueueType: quorum
+      rabbitmqClusterReference:
+        name: rabbitmq
+  - apiVersion: rabbitmq.com/v1beta1
+    kind: Permission
+    metadata:
+      name: glance-permission
+    spec:
+      vhost: "glance"
+      userReference:
+        name: "glance"
+      permissions:
+        write: ".*"
+        configure: ".*"
+        read: ".*"
+      rabbitmqClusterReference:
+        name: rabbitmq
+  - apiVersion: rabbitmq.com/v1beta1
+    kind: Policy
+    metadata:
+      name: glance-notifications-ttl
+    spec:
+      name: glance-notifications-ttl
+      vhost: "glance"
+      pattern: "^notifications.*"
+      applyTo: "queues"
+      priority: 1
+      definition:
+        message-ttl: 86400000
+      rabbitmqClusterReference:
+        name: rabbitmq
+  - apiVersion: rabbitmq.com/v1beta1
+    kind: Policy
+    metadata:
+      name: glance-quorum-three-replicas
+    spec:
+      name: glance-quorum-three-replicas
+      vhost: "glance"
+      pattern: ".*"
+      applyTo: queues
+      definition:
+        target-group-size: 3
+      priority: 0
+      rabbitmqClusterReference:
+        name: rabbitmq

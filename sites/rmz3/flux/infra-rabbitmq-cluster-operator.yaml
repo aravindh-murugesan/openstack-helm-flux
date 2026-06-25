@@ -1,0 +1,18 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: infra-rabbitmq-cluster-operator
+  namespace: flux-system
+  labels:
+    openstack-helm-flux/component-group: operators
+spec:
+  interval: 30m
+  targetNamespace: rabbitmq-system
+  sourceRef:
+    kind: GitRepository
+    name: openstack-helm-flux-repo
+    namespace: flux-system
+  path: ./sites/rmz2/infrastructure/rabbitmq-cluster-operator
+  prune: true
+  wait: true

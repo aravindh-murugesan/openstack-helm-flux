@@ -1,0 +1,34 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: openstack-rabbitmq-nova
+  namespace: openstack
+  labels:
+    openstack-helm-flux/component-group: openstack-infra
+spec:
+  interval: 30m
+  timeout: 10m
+  targetNamespace: openstack
+  dependsOn:
+    - name: infra-local-path-provisioner
+      namespace: flux-system
+    - name: infra-rabbitmq-cluster-operator
+      namespace: flux-system
+  sourceRef:
+    kind: GitRepository
+    name: openstack-helm-flux-repo
+    namespace: flux-system
+  path: ./sites/rmz2/openstack-apps/rabbitmq-nova-cluster
+  prune: true
+  wait: true
+  force: true
+  healthCheckExprs:
+    - apiVersion: rabbitmq.com/v1beta1
+      kind: RabbitmqCluster
+      current: >
+        has(status.observedGeneration) && status.observedGeneration == metadata.generation &&
+        has(status.conditions) &&
+        status.conditions.exists(c, c.type == 'AllReplicasReady' && c.status == 'True') &&
+        status.conditions.exists(c, c.type == 'ReconcileSuccess' && c.status == 'True') &&
+        has(status.quorumStatus) && status.quorumStatus == 'ok'

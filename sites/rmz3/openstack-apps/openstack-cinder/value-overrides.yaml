@@ -1,0 +1,246 @@
+images:
+  tags:
+    db_init: "quay.io/airshipit/openstack-client:2026.1-ubuntu_noble"
+    cinder_db_sync: "quay.io/airshipit/cinder:2026.1-ubuntu_noble"
+    db_drop: "quay.io/airshipit/openstack-client:2026.1-ubuntu_noble"
+    ks_user: "quay.io/airshipit/openstack-client:2026.1-ubuntu_noble"
+    ks_service: "quay.io/airshipit/openstack-client:2026.1-ubuntu_noble"
+    ks_endpoints: "quay.io/airshipit/openstack-client:2026.1-ubuntu_noble"
+    cinder_api: "quay.io/airshipit/cinder:2026.1-ubuntu_noble"
+    bootstrap: "quay.io/airshipit/openstack-client:2026.1-ubuntu_noble"
+    cinder_scheduler: "quay.io/airshipit/cinder:2026.1-ubuntu_noble"
+    cinder_volume: "quay.io/airshipit/cinder:2026.1-ubuntu_noble"
+    cinder_volume_usage_audit: "quay.io/airshipit/cinder:2026.1-ubuntu_noble"
+    cinder_db_purge: "quay.io/airshipit/cinder:2026.1-ubuntu_noble"
+    cinder_storage_init: "quay.io/airshipit/ceph-config-helper:latest-ubuntu_jammy"
+    cinder_backup: "quay.io/airshipit/cinder:2026.1-ubuntu_noble"
+    cinder_backup_storage_init: "quay.io/airshipit/ceph-config-helper:latest-ubuntu_jammy"
+
+conf:
+  backends:
+    rbd1: null
+    chn_rmz_izo_kvm_ssd_os_vs01:
+      volume_driver: cinder.volume.drivers.netapp.common.NetAppDriver
+      volume_backend_name: NA-VAYU-OSTK-NG-SSD
+      cluster: CHN_RMZ_IZO_KVM_SSD_OS_VS01
+      netapp_login: ostusr
+      netapp_vserver: CHN_RMZ_IZO_KVM_SSD_OS_VS01
+      netapp_password: P@ssw0rd@OS@KVM
+      netapp_server_port: 80
+      reserved_percentage: 20
+      netapp_storage_family: ontap_cluster
+      netapp_server_hostname: 100.100.171.250
+      netapp_storage_protocol: iscsi
+      image_volume_cache_enabled: true
+      max_over_subscription_ratio: 1.0
+      image_volume_cache_max_count: 50
+      netapp_lun_space_reservation: disabled
+      image_volume_cache_max_size_gb: 200
+      enforce_multipath_for_image_xfer: false
+  cinder:
+    DEFAULT:
+      enabled_backends: "chn_rmz_izo_kvm_ssd_os_vs01"
+      enable_iscsi: true
+      backup_driver: "cinder.backup.drivers.s3.S3BackupDriver"
+      backup_s3_endpoint_url: "http://100.100.171.15:9000"
+      backup_s3_retry_mode: "adaptive"
+      backup_s3_store_bucket: "cinder-backup"
+      backup_s3_store_access_key: "rustfsadmin"
+      backup_s3_store_secret_key: "rustfsadmin"
+      backup_s3_verify_ssl: false
+
+manifests:
+  statefulset_volume: true
+  deployment_backup: true
+
+extraObjects:
+  - apiVersion: gateway.networking.k8s.io/v1
+    kind: HTTPRoute
+    metadata:
+      name: cinder-route
+      namespace: "{{ .Release.Namespace }}"
+    spec:
+      hostnames:
+        - "{{ .Values.endpoints.volume.host_fqdn_override.public.host }}"
+      parentRefs:
+        - name: tata-internal-gw
+          namespace: envoy-gateway-system
+      rules:
+        - matches:
+            - path:
+                type: PathPrefix
+                value: /
+          timeouts:
+            request: 3600s
+            backendRequest: 3600s
+          backendRefs:
+            - name: cinder-api
+              port: 8776
+  - apiVersion: k8s.mariadb.com/v1alpha1
+    kind: Database
+    metadata:
+      name: cinder
+    spec:
+      mariaDbRef:
+        name: mariadb
+        waitForIt: true
+      characterSet: utf8
+      collate: utf8_general_ci
+      retryInterval: 5s
+  - apiVersion: k8s.mariadb.com/v1alpha1
+    kind: User
+    metadata:
+      name: cinder
+    spec:
+      mariaDbRef:
+        name: mariadb
+        waitForIt: true
+      passwordSecretKeyRef:
+        name: cinder-db-password
+        key: password
+      maxUserConnections: 0
+      host: "%"
+      retryInterval: 5s
+  - apiVersion: k8s.mariadb.com/v1alpha1
+    kind: Grant
+    metadata:
+      name: cinder-grant
+    spec:
+      mariaDbRef:
+        name: mariadb
+        waitForIt: true
+      privileges:
+        - "ALL"
+      database: "cinder"
+      table: "*"
+      username: cinder
+      grantOption: true
+      host: "%"
+      retryInterval: 5s
+  - apiVersion: rabbitmq.com/v1beta1
+    kind: User
+    metadata:
+      name: cinder
+    spec:
+      tags:
+        - management
+        - policymaker
+      rabbitmqClusterReference:
+        name: rabbitmq
+      importCredentialsSecret:
+        name: cinder-rabbitmq-password
+  - apiVersion: rabbitmq.com/v1beta1
+    kind: Vhost
+    metadata:
+      name: cinder-vhost
+    spec:
+      name: "cinder"
+      defaultQueueType: quorum
+      rabbitmqClusterReference:
+        name: rabbitmq
+  - apiVersion: rabbitmq.com/v1beta1
+    kind: Permission
+    metadata:
+      name: cinder-permission
+    spec:
+      vhost: "cinder"
+      userReference:
+        name: "cinder"
+      permissions:
+        write: ".*"
+        configure: ".*"
+        read: ".*"
+      rabbitmqClusterReference:
+        name: rabbitmq
+  - apiVersion: rabbitmq.com/v1beta1
+    kind: Policy
+    metadata:
+      name: cinder-notifications-ttl
+    spec:
+      name: cinder-notifications-ttl
+      vhost: "cinder"
+      pattern: "^notifications.*"
+      applyTo: "queues"
+      priority: 1
+      definition:
+        message-ttl: 86400000
+      rabbitmqClusterReference:
+        name: rabbitmq
+  - apiVersion: rabbitmq.com/v1beta1
+    kind: Policy
+    metadata:
+      name: cinder-quorum-three-replicas
+    spec:
+      name: cinder-quorum-three-replicas
+      vhost: "cinder"
+      pattern: ".*"
+      applyTo: queues
+      definition:
+        target-group-size: 3
+      priority: 0
+      rabbitmqClusterReference:
+        name: rabbitmq
+  - apiVersion: autoscaling/v2
+    kind: HorizontalPodAutoscaler
+    metadata:
+      name: cinder-api
+      namespace: "{{ .Release.Namespace }}"
+    spec:
+      scaleTargetRef:
+        apiVersion: apps/v1
+        kind: Deployment
+        name: cinder-api
+      minReplicas: 3
+      maxReplicas: 10
+      metrics:
+        - type: Resource
+          resource:
+            name: cpu
+            target:
+              type: Utilization
+              averageUtilization: 75
+      behavior:
+        scaleUp:
+          stabilizationWindowSeconds: 30
+          policies:
+            - type: Pods
+              value: 1
+              periodSeconds: 30
+        scaleDown:
+          stabilizationWindowSeconds: 300
+          policies:
+            - type: Percent
+              value: 100
+              periodSeconds: 15
+  - apiVersion: autoscaling/v2
+    kind: HorizontalPodAutoscaler
+    metadata:
+      name: cinder-scheduler
+      namespace: "{{ .Release.Namespace }}"
+    spec:
+      scaleTargetRef:
+        apiVersion: apps/v1
+        kind: Deployment
+        name: cinder-scheduler
+      minReplicas: 3
+      maxReplicas: 10
+      metrics:
+        - type: Resource
+          resource:
+            name: cpu
+            target:
+              type: Utilization
+              averageUtilization: 75
+      behavior:
+        scaleUp:
+          stabilizationWindowSeconds: 30
+          policies:
+            - type: Pods
+              value: 1
+              periodSeconds: 30
+        scaleDown:
+          stabilizationWindowSeconds: 300
+          policies:
+            - type: Percent
+              value: 100
+              periodSeconds: 15
