@@ -11,4 +11,4 @@ spec:
     matchLabels:
       application: node-problem-detector
   podMetricsEndpoints:
-    - port: 20257
+    - portNumber: 20257
