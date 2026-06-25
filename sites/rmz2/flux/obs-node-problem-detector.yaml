@@ -40,8 +40,8 @@ spec:
         namespace: flux-system
   install:
     timeout: 30m
-    disableWait: true
-    disableWaitForJobs: true
+    disableWait: false
+    disableWaitForJobs: false
   upgrade:
     timeout: 45m
     disableWait: false
