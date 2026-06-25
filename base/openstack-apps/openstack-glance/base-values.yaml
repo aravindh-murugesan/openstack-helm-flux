@@ -16,6 +16,27 @@ conf:
   glance:
     DEFAULT:
       workers: 4
+  glance_api_uwsgi:
+    uwsgi:
+      add-header: "Connection: close"
+      buffer-size: 65535
+      die-on-term: true
+      enable-threads: true
+      exit-on-reload: false
+      hook-master-start: unix_signal:15 gracefully_kill_them_all
+      lazy-apps: true
+      log-x-forwarded-for: true
+      master: true
+      procname-prefix-spaced: "glance-api:"
+      route-user-agent: "^kube-probe.* donotlog:"
+      thunder-lock: true
+      worker-reload-mercy: 80
+      module: glance.wsgi.api:application
+      stats: 0.0.0.0:1717
+      stats-http: true
+      http-timeout: 600
+      socket-timeout: 600
+      harakiri: 600
 
 volume:
   class_name: "local-path"

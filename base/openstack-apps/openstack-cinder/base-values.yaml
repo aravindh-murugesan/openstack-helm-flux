@@ -9,7 +9,6 @@ conf:
       rabbit_quorum_queues: true
       rabbit_transient_quorum_queue: true
       use_queue_manager: true
-
 pod:
   security_context:
     cinder_backup:
