@@ -1,0 +1,58 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VLCluster
+metadata:
+  name: vmlogs
+  namespace: observability
+spec:
+  retentionPeriod: "3d"
+
+  vlstorage:
+    image:
+      pullPolicy: IfNotPresent
+    replicaCount: 3
+    nodeSelector:
+      openstack-control-plane: enabled
+    resources:
+      requests:
+        cpu: "1000m"
+        memory: "512Mi"
+      limits:
+        cpu: "2000m"
+        memory: "2Gi"
+    storage:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: "local-path"
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: "20Gi"
+
+  vlinsert:
+    image:
+      pullPolicy: IfNotPresent
+    replicaCount: 2
+    nodeSelector:
+      openstack-control-plane: enabled
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "256Mi"
+      limits:
+        cpu: "500m"
+        memory: "512Mi"
+
+  vlselect:
+    image:
+      pullPolicy: IfNotPresent
+    replicaCount: 2
+    nodeSelector:
+      openstack-control-plane: enabled
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "256Mi"
+      limits:
+        cpu: "1000m"
+        memory: "512Mi"
