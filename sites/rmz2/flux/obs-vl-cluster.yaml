@@ -20,7 +20,7 @@ spec:
   prune: true
   wait: true
   healthCheckExprs:
-    - apiVersion: operator.victoriametrics.com/v1beta1
+    - apiVersion: operator.victoriametrics.com/v1
       kind: VLCluster
       current: "has(status.updateStatus) && status.updateStatus == 'operational'"
   force: true
