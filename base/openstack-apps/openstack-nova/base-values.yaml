@@ -42,7 +42,7 @@ conf:
       threads: 1
   logging:
     logger_nova:
-      level: DEBUG
+      level: INFO
   rabbitmq:
     policies: []
 
