@@ -6,3 +6,4 @@ resources:
   - ./victoria-metrics-agent.yaml
   - ./victoria-metrics-nodescrape.yaml
   - ./victoria-metrics-cadvisor-nodescrape.yaml
+  - ./victoria-metrics-nodeproblem-scrape.yaml

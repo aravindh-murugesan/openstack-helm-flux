@@ -1,0 +1,14 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMPodScrape
+metadata:
+  name: node-problem-detector
+  namespace: observability
+spec:
+  namespaceSelector:
+    matchNames:
+      - observability
+  selector:
+    matchLabels:
+      application: node-problem-detector
+  podMetricsEndpoints:
+    - port: 20257
