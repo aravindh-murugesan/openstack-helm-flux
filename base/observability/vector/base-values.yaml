@@ -1,0 +1,107 @@
+role: "Agent"
+
+commonLabels: {}
+hostAliases: []
+
+secrets:
+  generic: {}
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+
+args:
+  - --config-dir
+  - "/etc/vector/"
+
+containerPorts: []
+
+resources:
+  requests:
+    cpu: 200m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+service:
+  enabled: false
+  type: "ClusterIP"
+  annotations: {}
+
+serviceHeadless:
+  enabled: true
+
+customConfig:
+  data_dir: /vector-data-dir
+  api:
+    enabled: true
+    address: 127.0.0.1:8686
+  sources:
+    k8s_logs:
+      type: kubernetes_logs
+      ignore_older_secs: 3600
+      rotate_wait_secs: 1200
+      extra_namespace_label_selector: "vector_log_scrape=enabled"
+  sinks:
+    internal_vlogs:
+      type: http
+      inputs:
+        - k8s_logs
+      uri: "http://vlinsert-vmlogs.observability.svc:9481/insert/jsonline?_stream_fields=kubernetes.pod_node_name,kubernetes.pod_namespace,kubernetes.pod_name&_msg_field=message&_time_field=timestamp"
+      method: post
+      compression: gzip
+      encoding:
+        codec: json
+      framing:
+        method: newline_delimited
+      buffer:
+        type: disk
+        max_size: 1073741824
+        when_full: drop_newest
+
+defaultVolumes:
+  - name: var-log
+    hostPath:
+      path: "/var/log/"
+  - name: var-lib
+    hostPath:
+      path: "/var/lib/"
+  - name: procfs
+    hostPath:
+      path: "/proc"
+  - name: sysfs
+    hostPath:
+      path: "/sys"
+
+defaultVolumeMounts:
+  - name: var-log
+    mountPath: "/var/log/"
+    readOnly: true
+  - name: var-lib
+    mountPath: "/var/lib"
+    readOnly: true
+  - name: procfs
+    mountPath: "/host/proc"
+    readOnly: true
+  - name: sysfs
+    mountPath: "/host/sys"
+    readOnly: true
+
+persistence:
+  enabled: true
+  size: 10Gi
+  finalizers:
+    - kubernetes.io/pvc-protection
+  hostPath:
+    enabled: true
+    path: "/var/lib/vector"
+
+podMonitor:
+  enabled: true
+  jobLabel: app.kubernetes.io/name
+  port: prom-exporter
+  path: /metrics
+
+logLevel: "info"
+extraObjects: []

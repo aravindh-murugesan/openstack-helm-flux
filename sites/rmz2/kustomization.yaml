@@ -10,6 +10,7 @@ resources:
   - ./flux/obs-vm-cluster.yaml
   - ./flux/obs-vl-cluster.yaml
   - ./flux/obs-vm-agent.yaml
+  - ./flux/obs-vector.yaml
   - ./flux/obs-node-problem-detector.yaml
   - ./flux/infra-cnpg-operator.yaml
   - ./flux/infra-rabbitmq-cluster-operator.yaml

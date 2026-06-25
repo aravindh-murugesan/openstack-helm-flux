@@ -1,0 +1,56 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: obs-vector-values
+  namespace: observability
+  labels:
+    openstack-helm-flux/component-group: observability
+spec:
+  interval: 30m
+  targetNamespace: observability
+  sourceRef:
+    kind: GitRepository
+    name: openstack-helm-flux-repo
+    namespace: flux-system
+  path: ./sites/rmz2/observability/vector
+  prune: true
+  wait: true
+
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: vector
+  namespace: observability
+  labels:
+    openstack-helm-flux/component-group: observability
+spec:
+  interval: 10m
+  targetNamespace: observability
+  releaseName: vector
+  timeout: 30m
+  chart:
+    spec:
+      chart: vector
+      version: "0.38.0"
+      sourceRef:
+        kind: HelmRepository
+        name: vector
+        namespace: flux-system
+  install:
+    timeout: 30m
+    disableWait: false
+    disableWaitForJobs: false
+  upgrade:
+    timeout: 45m
+    disableWait: false
+    disableWaitForJobs: false
+    force: true
+  valuesFrom:
+    - kind: ConfigMap
+      name: openstack-helm-flux-vector-values
+      valuesKey: values.yaml
+    - kind: ConfigMap
+      name: openstack-helm-flux-vector-values-override
+      valuesKey: values.yaml

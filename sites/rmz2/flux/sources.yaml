@@ -42,3 +42,13 @@ spec:
   interval: 60m
   url: oci://docker.io/envoyproxy
   type: oci
+
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: vector
+  namespace: flux-system
+spec:
+  interval: 60m
+  url: https://helm.vector.dev
