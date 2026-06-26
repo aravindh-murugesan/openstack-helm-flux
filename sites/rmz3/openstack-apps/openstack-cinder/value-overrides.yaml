@@ -51,6 +51,7 @@ conf:
 
 manifests:
   statefulset_volume: true
+  deployment_volume: true
   deployment_backup: true
 
 extraObjects:
