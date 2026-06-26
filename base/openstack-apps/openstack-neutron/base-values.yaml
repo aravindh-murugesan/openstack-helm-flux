@@ -27,7 +27,7 @@ conf:
   neutron:
     DEFAULT:
       api_workers: 4
-      rpc_workers: 0
+      rpc_workers: 8
       rpc_response_timeout: 600
       router_distributed: True
       default_availability_zones: nova
