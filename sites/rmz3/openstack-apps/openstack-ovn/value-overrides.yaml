@@ -15,15 +15,15 @@ pod:
     vector: false
 
 conf:
-  ovn_bridge_mappings: "phprod:br-mgmt"
+  ovn_bridge_mappings: "phext:br-ex,phprod:br-mgmt"
   ovn_cms_options: "enable-chassis-as-gw,availability-zones=nova"
   overrides:
     ovn_controller:
       labels:
-      - label:
-          key: openstack-node-role-classification
-          values:
-          - "nfv"
-        conf:
-          ovn_bridge_mappings: "phext:br-ex,phprod:br-mgmt"
-          ovn_cms_options: "enable-chassis-as-gw,availability-zones=nova"
+        - label:
+            key: openstack-node-role-classification
+            values:
+              - "nfv"
+          conf:
+            ovn_bridge_mappings: "phext:br-ex,phprod:br-mgmt"
+            ovn_cms_options: "enable-chassis-as-gw,availability-zones=nova"
