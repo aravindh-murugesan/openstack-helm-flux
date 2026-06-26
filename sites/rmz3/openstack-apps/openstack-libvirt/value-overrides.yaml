@@ -5,7 +5,7 @@ images:
 conf:
   dynamic_options:
     libvirt:
-      listen_interface: enp3s0
+      listen_interface: production.171
   init_modules:
     enabled: false
 
