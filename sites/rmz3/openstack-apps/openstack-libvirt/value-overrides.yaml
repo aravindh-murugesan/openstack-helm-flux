@@ -12,7 +12,7 @@ conf:
 libvirt:
   extraContainers:
     - name: libvirt-exporter
-      image: ghcr.io/inovex/prometheus-libvirt-exporter:2.4.0
+      image: ghcr.io/inovex/prometheus-libvirt-exporter:v2.4.0
       imagePullPolicy: IfNotPresent
       args:
         - --libvirt.uri=/run/libvirt/libvirt-sock-ro
