@@ -103,4 +103,4 @@ spec:
     wsrep_slave_threads=8
 
   metrics:
-    enabled: false
+    enabled: true

@@ -17,6 +17,7 @@ conf:
       cross_az_attach: true
     libvirt:
       volume_use_multipath: true
+      num_pcie_ports: 28
     cache:
       enabled: true
       backend: oslo_cache.memcache_pool
