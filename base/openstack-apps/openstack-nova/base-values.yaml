@@ -29,9 +29,9 @@ conf:
       heartbeat_in_pthread: true
       kombu_reconnect_delay: 0.5
     conductor:
-      workers: 2
+      workers: 10
     scheduler:
-      workers: 2
+      workers: 10
   nova_api_uwsgi:
     uwsgi:
       processes: 2
