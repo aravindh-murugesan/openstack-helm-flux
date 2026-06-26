@@ -7,6 +7,7 @@ conf:
   nova:
     DEFAULT:
       osapi_compute_workers: 4
+      rpc_response_timeout: 120
       vif_plugging_is_fatal: true
       vif_plugging_timeout: 300
       ram_allocation_ratio: 1.0
@@ -14,6 +15,8 @@ conf:
       cpu_allocation_ratio: 4.0
       metadata_workers: 2
       cross_az_attach: true
+    libvirt:
+      volume_use_multipath: true
     cache:
       enabled: true
       backend: oslo_cache.memcache_pool

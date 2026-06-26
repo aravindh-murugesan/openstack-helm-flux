@@ -4,6 +4,7 @@ conf:
   cinder:
     DEFAULT:
       enabled_backends: ""
+      rpc_response_timeout: 120
     oslo_messaging_rabbit:
       rabbit_ha_queues: false
       rabbit_quorum_queues: true
