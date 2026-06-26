@@ -18,7 +18,7 @@ conf:
   ovn_bridge_mappings: "phprod:br-mgmt"
   ovn_cms_options: "enable-chassis-as-gw,availability-zones=nova"
   overrides:
-    ovn_controller:
+    ovn_controller_daemonset:
       labels:
         - labels:
             key: openstack-node-role-classification
