@@ -43,6 +43,22 @@ manifests:
   job_rabbit_init: true
 
 pod:
+  probes:
+    rpc_retries: 5
+    api-osapi:
+      default:
+        liveness:
+          enabled: True
+          params:
+            initialDelaySeconds: 10
+            periodSeconds: 60
+            timeoutSeconds: 60
+        readiness:
+          enabled: True
+          params:
+            initialDelaySeconds: 5
+            periodSeconds: 60
+            timeoutSeconds: 60
   replicas:
     osapi: 6
   security_context:
