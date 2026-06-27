@@ -38,11 +38,11 @@ conf:
       workers: 5
   nova_api_uwsgi:
     uwsgi:
-      processes: 8
+      processes: 2
       threads: 1
   nova_metadata_uwsgi:
     uwsgi:
-      processes: 4
+      processes: 2
       threads: 1
   logging:
     logger_nova:
@@ -64,7 +64,7 @@ pod:
     enabled: true
     api:
       requests:
-        memory: "256Mi"
+        memory: "512Mi"
     conductor:
       requests:
         memory: "512Mi"
