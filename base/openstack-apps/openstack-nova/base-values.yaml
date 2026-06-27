@@ -38,12 +38,12 @@ conf:
       workers: 5
   nova_api_uwsgi:
     uwsgi:
-      processes: 8
-      threads: 4
+      processes: 2
+      threads: 1
   nova_metadata_uwsgi:
     uwsgi:
-      processes: 8
-      threads: 4
+      processes: 2
+      threads: 1
   logging:
     logger_nova:
       level: INFO
