@@ -114,8 +114,8 @@ extraObjects:
                 type: PathPrefix
                 value: /
           timeouts:
-            request: 60s
-            backendRequest: 60s
+            request: 150s
+            backendRequest: 150s
           backendRefs:
             - name: nova-api
               port: 8774
