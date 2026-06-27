@@ -43,6 +43,8 @@ manifests:
   job_rabbit_init: true
 
 pod:
+  replicas:
+    osapi: 6
   security_context:
     compute:
       container:
@@ -70,8 +72,8 @@ extraObjects:
         apiVersion: apps/v1
         kind: Deployment
         name: nova-api-osapi
-      minReplicas: 3
-      maxReplicas: 10
+      minReplicas: 6
+      maxReplicas: 20
       metrics:
         - type: Resource
           resource:
