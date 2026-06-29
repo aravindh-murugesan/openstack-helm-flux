@@ -46,7 +46,7 @@ conf:
       netapp_server_port: 80
       reserved_percentage: 20
       netapp_storage_family: ontap_cluster
-      netapp_server_hostname: 100.100.171.245
+      netapp_server_hostname: 100.100.171.246
       netapp_storage_protocol: nvme
       image_volume_cache_enabled: true
       max_over_subscription_ratio: 1.0

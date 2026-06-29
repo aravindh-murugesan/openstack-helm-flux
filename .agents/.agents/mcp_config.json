@@ -1,0 +1,7 @@
+{
+    "mcpServers": {
+        "radar": {
+            "serverUrl": "http://localhost:9280/mcp"
+        }
+    }
+}
