@@ -37,9 +37,27 @@ conf:
       netapp_lun_space_reservation: disabled
       image_volume_cache_max_size_gb: 200
       enforce_multipath_for_image_xfer: false
+    chn_rmz_izo_kvm_ssd_os_nvme_vs01:
+      volume_driver: cinder.volume.drivers.netapp.common.NetAppDriver
+      volume_backend_name: NA-VAYU-OSTK-NG-NVME
+      netapp_login: ostusr
+      netapp_vserver: CHN_RMZ_IZO_KVM_SSD_OS_NVME_VS01
+      netapp_password: Ost@123@usr
+      netapp_server_port: 80
+      reserved_percentage: 20
+      netapp_storage_family: ontap_cluster
+      netapp_server_hostname: 100.100.171.245
+      netapp_storage_protocol: nvme
+      image_volume_cache_enabled: true
+      max_over_subscription_ratio: 1.0
+      image_volume_cache_max_count: 50
+      netapp_lun_space_reservation: disabled
+      image_volume_cache_max_size_gb: 200
+      enforce_multipath_for_image_xfer: false
+
   cinder:
     DEFAULT:
-      enabled_backends: "chn_rmz_izo_kvm_ssd_os_vs01"
+      enabled_backends: "chn_rmz_izo_kvm_ssd_os_vs01,chn_rmz_izo_kvm_ssd_os_nvme_vs01"
       default_volume_type: netapp-iscsi
       enable_iscsi: true
       backup_driver: "cinder.backup.drivers.s3.S3BackupDriver"
