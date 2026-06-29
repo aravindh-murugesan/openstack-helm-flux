@@ -40,9 +40,9 @@ conf:
     chn_rmz_izo_kvm_ssd_os_nvme_vs01:
       volume_driver: cinder.volume.drivers.netapp.common.NetAppDriver
       volume_backend_name: NA-VAYU-OSTK-NG-NVME
-      netapp_login: ostusr
+      netapp_login: kvmnvme
       netapp_vserver: CHN_RMZ_IZO_KVM_SSD_OS_NVME_VS01
-      netapp_password: Ost@123@usr
+      netapp_password: Open@stack@123
       netapp_server_port: 80
       reserved_percentage: 20
       netapp_storage_family: ontap_cluster
