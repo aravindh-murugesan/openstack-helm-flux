@@ -19,7 +19,7 @@ conf:
     DEFAULT:
       enabled_backends: file:file,http:http,s3primary:s3
     glance_store:
-      default_backends: s3primary
+      default_backend: s3primary
     s3primary:
       s3_store_host: "http://100.100.171.15:9000"
       s3_store_access_key: "rustfsadmin"
