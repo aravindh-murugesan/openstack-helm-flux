@@ -1,0 +1,52 @@
+---
+release_group: skyline
+
+network:
+  dashboard:
+    ingress:
+      public: false
+
+pod:
+  replicas:
+    skyline: 3
+
+  resources:
+    enabled: true
+    skyline:
+      requests:
+        memory: "512Mi"
+        cpu: "1000m"
+      limits:
+        memory: "1024Mi"
+        cpu: "2000m"
+
+conf:
+  nginx:
+    default_language: en
+  skyline:
+    default:
+      debug: false
+      log_dir: /var/log
+      log_file: /dev/stdout
+      access_log_file: /dev/stdout
+      error_log_file: /dev/stdout
+    openstack:
+      interface_type: internal
+      default_region: RegionOne
+  gunicorn: |
+    import multiprocessing
+    bind = "unix:/var/lib/skyline/skyline.sock"
+    workers = (1 + multiprocessing.cpu_count()) // 2
+    worker_class = "uvicorn.workers.UvicornWorker"
+    timeout = 300
+    keepalive = 5
+    reuse_port = False
+    proc_name = "skyline"
+    log_level = "info"
+    disable_redirect_access_to_syslog = True
+    access_logfile = "-"
+    error_logfile = "-"
+
+manifests:
+  job_db_init: false
+  job_db_sync: true

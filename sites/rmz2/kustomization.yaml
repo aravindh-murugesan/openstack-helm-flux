@@ -33,3 +33,4 @@ resources:
   - ./flux/openstack-neutron.yaml
   - ./flux/openstack-nova.yaml
   - ./flux/openstack-horizon.yaml
+  - ./flux/openstack-skyline.yaml

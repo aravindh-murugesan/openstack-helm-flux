@@ -8,6 +8,15 @@ endpoints:
     host_fqdn_override:
       public:
         host: "ui.rmz2.com"
+  skyline:
+    scheme:
+      public: https
+    port:
+      api:
+        public: 443
+    host_fqdn_override:
+      public:
+        host: "skyline.rmz2.com"
   volume:
     scheme:
       public: https
@@ -132,6 +141,14 @@ endpoints:
         role: admin,service
         username: nova
         password: "6J5RIX5TgS55kU7qskUmVMWlzK4e2Cry"
+        project_name: service
+        user_domain_name: service
+        project_domain_name: service
+      skyline:
+        region_name: RMZ
+        role: admin,service
+        username: skyline
+        password: "p5R8kN2vM7xW4jL9bC6qD3fH1tY0gZ"
         project_name: service
         user_domain_name: service
         project_domain_name: service
