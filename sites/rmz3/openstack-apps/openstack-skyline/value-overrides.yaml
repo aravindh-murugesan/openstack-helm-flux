@@ -12,6 +12,7 @@ conf:
     openstack:
       default_region: RMZ
       system_user_password: "k9N3bJ8vL2wR5tH7mC1xD4qP6yF0gZ"
+      system_user_domain: service
 
 extraObjects:
   - apiVersion: k8s.mariadb.com/v1alpha1
