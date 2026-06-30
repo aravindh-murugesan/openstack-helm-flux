@@ -11,6 +11,7 @@ conf:
   skyline:
     openstack:
       default_region: RMZ
+      system_user_password: "p5R8kN2vM7xW4jL9bC6qD3fH1tY0gZ"
 
 extraObjects:
   - apiVersion: k8s.mariadb.com/v1alpha1
