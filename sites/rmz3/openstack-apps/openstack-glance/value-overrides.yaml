@@ -14,6 +14,14 @@ images:
 storage: pvc
 keep_pvc: true
 
+pod:
+  security_context:
+    glance:
+      container:
+        glance_api:
+          readOnlyRootFilesystem: false
+          allowPrivilegeEscalation: true
+
 conf:
   glance:
     DEFAULT:
