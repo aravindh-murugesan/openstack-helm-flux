@@ -16,6 +16,19 @@ keep_pvc: true
 
 conf:
   glance:
+    DEFAULT:
+      enabled_backends: file:file,http:http,s3primary:s3
+    glance_store:
+      default_backends: s3primary
+    s3primary:
+      s3_store_host: "http://100.100.171.15:9000"
+      s3_store_access_key: "rustfsadmin"
+      s3_store_secret_key: "rustfsadmin"
+      s3_store_bucket: "glance-images"
+      s3_store_create_bucket_on_put: true
+      s3_store_bucket_url_format: path
+      s3_store_thread_pools: 20
+      s3_store_large_object_chunk_size: 32
     oslo_messaging_rabbit:
       rabbit_ha_queues: false
       rabbit_quorum_queues: true
