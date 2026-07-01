@@ -5,7 +5,8 @@ images:
 conf:
   dynamic_options:
     libvirt:
-      listen_interface: enp3s0
+      listen_interface: null
+      listen_address: 127.0.0.1
   init_modules:
     enabled: false
 
