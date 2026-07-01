@@ -4,4 +4,3 @@ kind: Kustomization
 
 resources:
   - ./mariadb-cluster.yaml
-  - ./mariadb-backup.yaml

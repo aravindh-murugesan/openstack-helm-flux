@@ -4,3 +4,5 @@ kind: Kustomization
 
 resources:
   - ../../../../base/openstack-apps/mariadb-cluster
+  - ./mariadb-backup.yaml
+  - ./s3-creds-secret.yaml
