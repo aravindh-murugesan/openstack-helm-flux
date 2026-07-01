@@ -14,7 +14,7 @@ spec:
     s3:
       bucket: openstack-backups
       prefix: mariadb
-      endpoint: http://100.100.171.15:9000
+      endpoint: 100.100.171.15:9000
       region: us-east-1
       accessKeyIdSecretKeyRef:
         name: s3-creds
