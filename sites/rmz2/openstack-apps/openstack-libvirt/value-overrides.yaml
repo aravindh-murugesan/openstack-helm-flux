@@ -5,8 +5,7 @@ images:
 conf:
   dynamic_options:
     libvirt:
-      listen_interface: null
-      listen_address: 127.0.0.1
+      listen_interface: production.173
   init_modules:
     enabled: false
 
