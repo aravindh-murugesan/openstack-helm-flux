@@ -65,6 +65,7 @@ secrets:
     glance: glance-keystone-neutron
     admin: neutron-keystone-admin
     service: neutron-keystone-service
+    skyline: neutron-keystone-skyline
 
 dependencies:
   static:
